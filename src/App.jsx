@@ -3,20 +3,13 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { AiFillAccountBook } from "react-icons/ai";
+import Header from './components/header';
 
 function App() {
   return (
     <>
-      <div className= 'w-full h-screen flex'>
+      <Header />
 
-        <div className="bg-green-100 w-[300px] h-full ">
-        </div>
-
-        <div className="bg-blue-100 flex-1 h-full">
-          <AiFillAccountBook />
-        </div>
-
-      </div>
     </>
   ) 
 }

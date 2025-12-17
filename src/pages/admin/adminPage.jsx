@@ -1,5 +1,7 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { MdDashboard, MdBookmark, MdDevices, MdPerson } from 'react-icons/md';
+import AdminItemsPage from './adminItemsPage';
+import AddItemPage from './addItemPage';
 
 export default function AdminPage() {
   return (
@@ -23,12 +25,13 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      <div className="flex-1 h-screen bg-blue-600">
+      <div className="flex-1 h-screen bg-blue-100">
         <Routes>
-          <Route path="/dashboard" element={<h1>Admin Dashboard</h1>} />
+          <Route path="/dashboard" element={<h1>Dashboard</h1>} /> 
           <Route path="/bookings" element={<h1>Manage Bookings</h1>} />
-          <Route path="/items" element={<h1>Manage Items</h1>} />
+          <Route path="/items" element={<AdminItemsPage />} />
           <Route path="/users" element={<h1>Manage Users</h1>} />
+          <Route path="/addItems" element={<AddItemPage />} />
         </Routes>
       </div>
     </div>

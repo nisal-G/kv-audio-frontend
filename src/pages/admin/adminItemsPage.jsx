@@ -1,42 +1,3 @@
-const sampleArr = 
- [
-  {
-    "key": "SPK001",
-    "name": "Portable Bluetooth Speaker",
-    "price": 12500,
-    "category": "Audio",
-    "dimensions": "20 x 10 x 8 cm",
-    "description": "High-quality portable Bluetooth speaker with deep bass and long battery life.",
-    "availability": true,
-    "image": [
-      "https://example.com/images/speaker1.jpg",
-      "https://example.com/images/speaker2.jpg"
-    ]
-  },
-  {
-    "key": "MIC002",
-    "name": "Wireless Microphone",
-    "price": 8500,
-    "category": "Audio",
-    "dimensions": "25 x 5 x 5 cm",
-    "description": "Wireless microphone suitable for events, karaoke, and presentations.",
-    "availability": true,
-    "image": [
-      "https://example.com/images/mic1.jpg"
-    ]
-  },
-  {
-    "key": "MIX003",
-    "name": "Audio Mixer",
-    "price": 32000,
-    "category": "Studio Equipment",
-    "dimensions": "40 x 30 x 10 cm",
-    "description": "Professional audio mixer with multiple input channels and sound controls.",
-    "availability": false,
-    "image": []
-  }
-];
-
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { CiCirclePlus } from "react-icons/ci";
@@ -45,6 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function AdminItemsPage() {
   const [items, setItems] = useState([]);
+  const [itemsLoaded, setItemsLoaded] = useState(false);
 
   const handleEdit = (itemKey) => {
     console.log('Edit item:', itemKey);
@@ -53,18 +15,22 @@ export default function AdminItemsPage() {
 
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
 
-    axios.get('http://localhost:3000/api/products/get', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }).then(response => {
-        setItems(response.data);
-    }).catch(error => {
-      console.error('Error fetching items:', error);
-    });
-  }, []);
+    if(!itemsLoaded) {
+      const token = localStorage.getItem('token');
+
+      axios.get('http://localhost:3000/api/products/get', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then(response => {
+          setItems(response.data);
+          setItemsLoaded(true);
+      }).catch(error => {
+        console.error('Error fetching items:', error);
+      });
+    }
+  }, [itemsLoaded]);
 
   
   const handleDelete = (key) => {
@@ -76,6 +42,7 @@ export default function AdminItemsPage() {
         (res) => {
           console.log(res.data);
           setItems(items.filter((item) => item.key !== key));
+          setItemsLoaded(false);
         }
       ).catch(
         (err) => {
@@ -105,8 +72,19 @@ export default function AdminItemsPage() {
 
       {/* Table Section */}
       <div className="bg-white rounded-xl shadow-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        {!itemsLoaded && (
+          <div className="flex justify-center items-center py-20">
+            <div className="relative">
+              {/* Outer ring */}
+              <div className="w-24 h-24 rounded-full border-4 border-gray-200"></div>
+              {/* Spinning gradient ring */}
+              <div className="absolute top-0 left-0 w-24 h-24 rounded-full border-4 border-transparent border-t-amber-600 border-r-orange-500 animate-spin"></div>
+            </div>
+          </div>
+        )}
+
+        {itemsLoaded && <div className="overflow-x-auto">
+          <table className="w-full"> 
             <thead>
               <tr className="bg-gradient-to-r from-amber-600 to-orange-600 text-white">
                 <th className="px-6 py-4 text-left text-sm font-semibold">Item Key</th>
@@ -174,10 +152,10 @@ export default function AdminItemsPage() {
               }
             </tbody>
           </table>
-        </div>
+        </div>}
 
         {/* Empty State */}
-        {items.length === 0 && (
+        {itemsLoaded && items.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No items found. Add your first product!</p>
           </div>

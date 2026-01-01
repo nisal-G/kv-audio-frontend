@@ -44,53 +44,47 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 export default function AdminItemsPage() {
-  const [items, setItems] = useState(sampleArr);
+  const [items, setItems] = useState([]);
 
   const handleEdit = (itemKey) => {
     console.log('Edit item:', itemKey);
     // TODO: Implement edit functionality
   };
 
-  const handleDelete = async (itemKey) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) {
-      return;
-    }
-    
-    try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:3000/api/products/${itemKey}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      // Remove item from state
-      setItems(items.filter(item => item.key !== itemKey));
-      alert('Item deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting item:', error);
-      alert('Failed to delete item');
-    }
-  };
-  
 
   useEffect(() => {
-
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     axios.get('http://localhost:3000/api/products/get', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     }).then(response => {
-      if (response.data.items && Array.isArray(response.data.items)) {
-        setItems(response.data.items);
-      }
+        setItems(response.data);
     }).catch(error => {
       console.error('Error fetching items:', error);
-      // Keep the sample data on error
     });
   }, []);
+
+  
+  const handleDelete = (key) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      const token = localStorage.getItem("token");
+      axios.delete(`http://localhost:3000/api/products/delete/${key}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then(
+        (res) => {
+          console.log(res.data);
+          setItems(items.filter((item) => item.key !== key));
+        }
+      ).catch(
+        (err) => {
+          console.error(err);
+        }
+      );
+    }
+  };
+  
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 p-6">

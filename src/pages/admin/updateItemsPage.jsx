@@ -1,15 +1,19 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function UpdateItemPage() {
-  const [Key, setKey] = useState('');
-  const [productName, setProductName] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [dimensions, setDimensions] = useState('');
-  const [description, setDescription] = useState('');
+
+  const location = useLocation();
+
+  const [Key, setKey] = useState(location.state.key);
+  const [productName, setProductName] = useState(location.state.name);
+  const [price, setPrice] = useState(location.state.price);
+  const [category, setCategory] = useState(location.state.category);
+  const [dimensions, setDimensions] = useState(location.state.dimensions);
+  const [description, setDescription] = useState(location.state.description);
+
   const navigate = useNavigate();
 
   async function handleAddItem(e) {
@@ -19,8 +23,7 @@ export default function UpdateItemPage() {
 
     if(token) {
       try {
-        const result = await axios.post("http://localhost:3000/api/products/update/", {
-          key: Key,
+        const result = await axios.put(`http://localhost:3000/api/products/update/${Key}`, {
           name: productName,
           price: price,
           category: category,

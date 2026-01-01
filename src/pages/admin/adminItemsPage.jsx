@@ -100,7 +100,7 @@ export default function AdminItemsPage() {
             </thead>
             <tbody>
               {
-                Array.isArray(items) && items.map((item, index) => (
+                 items.map((item, index) => (
                   <tr 
                     key={item.key} 
                     className={`border-b border-gray-200 hover:bg-amber-50 transition-colors ${
@@ -120,7 +120,7 @@ export default function AdminItemsPage() {
                     <td className="px-6 py-4 text-sm text-gray-600">{item.dimensions}</td>
                     <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" title={item.description}>
                       {item.description}
-                    </td>
+                    </td>  
                     <td className="px-6 py-4 text-center">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         item.availability 
@@ -134,7 +134,7 @@ export default function AdminItemsPage() {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() =>
-                            navigate('/admin/updateItems')}
+                            navigate('/admin/updateItems', { state: item})}
                           className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 transform hover:scale-110"
                           title="Edit item"
                         >

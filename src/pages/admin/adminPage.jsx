@@ -2,6 +2,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import { MdDashboard, MdBookmark, MdDevices, MdPerson } from 'react-icons/md';
 import AdminItemsPage from './adminItemsPage';
 import AddItemPage from './addItemPage';
+import UpdateItemPage from './updateItemsPage';
 
 export default function AdminPage() {
   return (
@@ -32,6 +33,7 @@ export default function AdminPage() {
           <Route path="/items" element={<AdminItemsPage />} />
           <Route path="/users" element={<h1>Manage Users</h1>} />
           <Route path="/addItems" element={<AddItemPage />} />
+          <Route path="/updateItems" element={<UpdateItemPage />} />
         </Routes>
       </div>
     </div>

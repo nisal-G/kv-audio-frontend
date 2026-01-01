@@ -2,11 +2,12 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import { MdEdit, MdDelete } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AdminItemsPage() {
   const [items, setItems] = useState([]);
   const [itemsLoaded, setItemsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   const handleEdit = (itemKey) => {
     console.log('Edit item:', itemKey);
@@ -132,7 +133,8 @@ export default function AdminItemsPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
                         <button
-                          onClick={() => handleEdit(item.key)}
+                          onClick={() =>
+                            navigate('/admin/updateItems')}
                           className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 transform hover:scale-110"
                           title="Edit item"
                         >

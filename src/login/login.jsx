@@ -11,7 +11,9 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post("http://localhost:3000/api/users/logging", { email, password })
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+    axios.post(`${backendUrl}/api/users/logging`, { email, password })
       .then(response => {
         toast.success("Login successful!");
 

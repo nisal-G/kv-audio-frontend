@@ -19,8 +19,9 @@ export default function AdminItemsPage() {
 
     if(!itemsLoaded) {
       const token = localStorage.getItem('token');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-      axios.get('http://localhost:3000/api/products/get', {
+      axios.get(`${backendUrl}/api/products/get`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -37,7 +38,7 @@ export default function AdminItemsPage() {
   const handleDelete = (key) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       const token = localStorage.getItem("token");
-      axios.delete(`http://localhost:3000/api/products/delete/${key}`, {
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/delete/${key}`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then(
         (res) => {

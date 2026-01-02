@@ -16,14 +16,14 @@ export default function UpdateItemPage() {
 
   const navigate = useNavigate();
 
-  async function handleAddItem(e) {
+  async function handleUpdateItem(e) {
     e.preventDefault();
 
     const token = localStorage.getItem('token');
 
     if(token) {
       try {
-        const result = await axios.put(`http://localhost:3000/api/products/update/${Key}`, {
+        const result = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/update/${Key}`, {
           name: productName,
           price: price,
           category: category,
@@ -134,7 +134,7 @@ export default function UpdateItemPage() {
           {/* Buttons */}
           <div className="space-y-2 pt-2">
             <button 
-              onClick={handleAddItem}
+              onClick={handleUpdateItem}
               type="submit"
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
             >

@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
     const [firstName, setFirstName] = useState("");
@@ -7,6 +10,29 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleOnSubmit = (e) => {
+        e.preventDefault();
+
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/`, {
+            email : email,
+            firstName : firstName,
+            lastName : lastName,
+            email : email,
+            password : password,
+            address : address,
+            phone : phone
+        })
+        .then(response => {
+            toast.success("Registration successful");
+            navigate("/login");
+        })
+        .catch(error => {
+            toast.error(error?.response?.data?.error || "Registration failed. Please try again.");
+        });
+    }
 
     return (
         <div
@@ -25,7 +51,7 @@ export default function RegisterPage() {
 
                 <h2 className="text-3xl font-bold text-white mb-6 tracking-wide">Create Account</h2>
 
-                <form className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+                <form onSubmit={handleOnSubmit} className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="relative group">
                         <input
                             type="text"
@@ -129,7 +155,7 @@ export default function RegisterPage() {
                     </div>
 
                     <button
-                        type="button"
+                        type="submit"
                         className="col-span-1 md:col-span-2 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transform transition hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-blue-500/30 mt-2"
                     >
                         Register

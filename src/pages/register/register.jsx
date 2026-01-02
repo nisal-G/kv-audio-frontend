@@ -20,7 +20,6 @@ export default function RegisterPage() {
             email : email,
             firstName : firstName,
             lastName : lastName,
-            email : email,
             password : password,
             address : address,
             phone : phone

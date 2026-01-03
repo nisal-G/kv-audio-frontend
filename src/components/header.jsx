@@ -3,7 +3,7 @@ import Home from "../pages/home/homePage";
 
 export default function Header() {
   return (
-    <header className="w-full h-16 text-black flex justify-center items-center px-4 relative">
+    <header className="w-full h-16 text-white flex justify-center items-center px-4 relative bg-accent">
 
       <img src="/KV_Audio_Logo.png" alt="KV Audio Logo" className="w-[100px] h-[60px] object-cover absolute left-4 border-1 border-amber-100 rounded-full"/>
       <Link to="/home"className="text-[25px] font-bold m-1"> Home</Link>

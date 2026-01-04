@@ -7,7 +7,11 @@ export default function Testing() {
 
   function uploadFile() {
     console.log(file);
-    mediaUpload(file);
+    mediaUpload(file).then((url) => {
+      console.log("File uploaded to URL:", url);
+    }).catch((error) => {
+      console.error("Upload failed:", error);
+    });
   }
 
   return (

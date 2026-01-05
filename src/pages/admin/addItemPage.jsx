@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function AddItemPage() {
   const [Key, setKey] = useState('');
@@ -10,23 +11,46 @@ export default function AddItemPage() {
   const [category, setCategory] = useState('');
   const [dimensions, setDimensions] = useState('');
   const [description, setDescription] = useState('');
+  const [productImages, setProductImages] = useState([]);
   const navigate = useNavigate();
 
   async function handleAddItem(e) {
     e.preventDefault();
+    console.log("Product Images:", productImages);
+    const promises = []; 
+    for (let i = 0; i < productImages.length; i++) {
+      console.log("Uploading image:", productImages[i])
+      const promise = mediaUpload(productImages[i]);
+      promises.push(promise);
+    }
+
 
     const token = localStorage.getItem('token');
 
     if(token) {
       try {
-        const result = await axios.post("http://localhost:3000/api/products/", {
+
+        // Wait for all uploads to complete | Promise.all is used to handle multiple promises
+        // Promise.all(promises)
+        //   .then((results) => {
+        //     console.log(results);
+        //   }). catch((error) => {
+        //     toast.error("Error uploading images:", error);
+        //   });
+
+        const uploadedImageUrls = await Promise.all(promises); // Wait for all uploads to complete
+         
+
+        const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/`, {
           key: Key,
           name: productName,
           price: price,
           category: category,
           dimensions: dimensions,
-          description: description
-        }, {
+          description: description,
+          image : uploadedImageUrls
+        }, 
+        {
           headers: {
             Authorization: "Bearer " + token
           }
@@ -124,6 +148,15 @@ export default function AddItemPage() {
               placeholder="Product Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <input 
+              type="file"
+              multiple
+              className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              onChange={(e) => setProductImages(Array.from(e.target.files))}
             />
           </div>
 

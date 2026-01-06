@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function UpdateItemPage() {
 
@@ -36,8 +37,6 @@ export default function UpdateItemPage() {
 
       updatingImages = await Promise.all(promises); // Wait for all uploads to complete`  
     }
-
-    
 
     const token = localStorage.getItem('token');
 

@@ -13,11 +13,31 @@ export default function UpdateItemPage() {
   const [category, setCategory] = useState(location.state.category);
   const [dimensions, setDimensions] = useState(location.state.dimensions);
   const [description, setDescription] = useState(location.state.description);
+  const [productImages, setProductImages] = useState();
 
   const navigate = useNavigate();
 
   async function handleUpdateItem(e) {
+
     e.preventDefault();
+
+    //set Images to existing images if no new images are selected
+    let updatingImages = location.state.image;
+
+
+    if (productImages.length > 0) {
+
+        const promises = []; 
+        for (let i = 0; i < productImages.length; i++) {
+          console.log("Uploading image:", productImages[i])
+          const promise = mediaUpload(productImages[i]);
+          promises.push(promise);
+      }
+
+      updatingImages = await Promise.all(promises); // Wait for all uploads to complete`  
+    }
+
+    
 
     const token = localStorage.getItem('token');
 
@@ -28,7 +48,8 @@ export default function UpdateItemPage() {
           price: price,
           category: category,
           dimensions: dimensions,
-          description: description
+          description: description,
+          image : updatingImages
         }, {
           headers: {
             Authorization: "Bearer " + token
@@ -36,14 +57,14 @@ export default function UpdateItemPage() {
         });
 
         console.log("Backend response:", result.data);
-        toast.success("Item added successfully!");
+        toast.success("Item Updated successfully!");
         navigate('/admin/items');
         
       } catch (error) {
-        toast.error(error.response?.data?.error || "An error occurred while adding the item.");
+        toast.error(error.response?.data?.error || "An error occurred while updating the item.");
       }
     } else {
-      toast.error("You must be logged in to add an item.");
+      toast.error("You must be logged in to update an item.");
     }
   }
 
@@ -128,6 +149,16 @@ export default function UpdateItemPage() {
               placeholder="Product Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          {/* Product Images */}
+          <div>
+            <input 
+              type="file"
+              multiple
+              className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              onChange={(e) => setProductImages(Array.from(e.target.files))}
             />
           </div>
 

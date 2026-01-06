@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function ProductCard(props) {
 
   const item = props.item;
@@ -65,8 +67,8 @@ export default function ProductCard(props) {
             </p>
           </div>
 
-          {/* Add to Cart Button */}
-          <button
+          {/* View Details Button */}
+          <Link to = {"/product/" + item.key}
             className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${item.availability
                 ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -74,7 +76,7 @@ export default function ProductCard(props) {
             disabled={!item.availability}
           >
             {item.availability ? 'View Details' : 'Unavailable'}
-          </button>
+          </Link>
         </div>
       </div>
     </div>

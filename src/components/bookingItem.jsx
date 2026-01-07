@@ -4,21 +4,29 @@ import { removeFromCart } from "../utils/cart";
 
 export default function BookingItem(props) {
 
+    // Extract props: itemKey (product ID), qty (quantity), refresh (callback to update parent)
     const {itemKey, qty, refresh} = props; 
+    
+    // State to store product details fetched from API
     const [item, setItem] = useState(null);
+    
+    // Track loading status: "loading" | "loaded" | "error"
     const [status, setStatus] = useState("loading"); 
 
+    // Fetch product details when component mounts or status changes
     useEffect(() => {
 
             if (status === "loading") {
             const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/api/products/get/${itemKey}`
             
+            // Request product data from backend
             axios.get(apiUrl)
             .then((res) => {
                 setItem(res.data)
                 setStatus("loaded")
                 console.log( res.data)
             }).catch((error) => {
+                // If product not found or error occurs, remove from cart
                 console.error("Error fetching product data:", error)
                 setStatus("error")
                 removeFromCart(itemKey);
@@ -29,16 +37,18 @@ export default function BookingItem(props) {
 
     }, [status]);
 
+    // Remove item from cart and update parent component
     const handleRemoveItem = () => {
         removeFromCart(itemKey);
         refresh();
     };
 
+    // Update item quantity in localStorage and trigger parent refresh
     const updateQuantity = (newQty) => {
         if (newQty < 1) return; // Don't allow quantity less than 1
         
         const cart = JSON.parse(localStorage.getItem("cart"));
-        const itemIndex = cart.orderedItems.findIndex(item => item.key === itemKey); // Find the item in the cart
+        const itemIndex = cart.orderedItems.findIndex(item => item.key === itemKey);
         
         if (itemIndex !== -1) {
             cart.orderedItems[itemIndex].qty = newQty;
@@ -47,17 +57,19 @@ export default function BookingItem(props) {
         }
     };
 
+    // Increase quantity by 1
     const handleIncreaseQty = () => {
         updateQuantity(qty + 1);
     };
 
+    // Decrease quantity by 1 (minimum is 1)
     const handleDecreaseQty = () => {
         if (qty > 1) {
             updateQuantity(qty - 1);
         }
     };
 
-    // Loading State
+    // Show skeleton loader while fetching product data
     if (status === "loading") {
         return (
             <div className="w-full bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 animate-pulse">
@@ -73,13 +85,15 @@ export default function BookingItem(props) {
         );
     }
 
-    // Error State
+    // Hide component if product failed to load or doesn't exist
     if (status === "error" || !item) {
         return null;
     }
 
+    // Calculate total price for this item (unit price × quantity)
     const totalPrice = item.price * qty;
 
+    // Render the booking item card with image, details, quantity controls, and remove button
     return (
         <div className="w-[75%] bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden mb-4">
             <div className="flex flex-col md:flex-row items-stretch">

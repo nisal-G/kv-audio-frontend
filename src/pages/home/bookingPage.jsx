@@ -14,6 +14,7 @@ export default function BookingPage() {
     const [endDate, setEndDate] = useState(tomorrow);
     const [total, setTotal] = useState(0);
 
+    // Recalculate total whenever startDate or endDate changes
     useEffect(() => {
         calculateTotal();
     }, [startDate, endDate]);
@@ -52,6 +53,8 @@ export default function BookingPage() {
         cart.days = totalDays; // Set total days
 
         const token = localStorage.getItem("token");
+
+        // Send booking creation request to backend
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/orders`, 
             cart,
             {
@@ -59,7 +62,7 @@ export default function BookingPage() {
                     Authorization: `Bearer ${token}`
                 }   
             }
-        ).then((res) => {
+        ).then((res) => { 
             console.log("Booking created successfully:", res.data);
             toast.success("Booking created successfully!");
         }).catch((error) => {
@@ -72,14 +75,15 @@ export default function BookingPage() {
 
     // Calculate the number of days between start and end date
     function calculateDays() {
-        if (!startDate || !endDate) return 0;
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        if (!startDate || !endDate) return 0; // Return 0 if dates are not set
+        const start = new Date(startDate); // Convert to Date object
+        const end = new Date(endDate); // Convert to Date object
         const diffTime = end - start;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays >= 0 ? diffDays : 0;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+        return diffDays >= 0 ? diffDays : 0; // Ensure non-negative days
     }
 
+    // Get total days for booking
     const totalDays = calculateDays();
 
 

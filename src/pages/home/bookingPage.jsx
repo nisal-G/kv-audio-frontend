@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { loadCart } from "../../utils/cart";
+import BookingItem from "../../components/bookingItem";
 
 export default function BookingPage() {
 
@@ -14,12 +15,12 @@ export default function BookingPage() {
         <div className="w-full h-full flex flex-col items-center">
             <div className="w-full flex flex-col items-center">
                 {
-                    cart.orderedItems.map((item) => (
-                        <div key={item.key}>
-                            <span>{item.key}</span> X
-                            <span> {item.qty}</span>
-                        </div>
-                    ))
+                    cart.orderedItems.map((item) => {
+                        return (
+                            // Render each booking item and pass reloadCart to refresh the cart when needed
+                            <BookingItem key={item.key} itemKey={item.key} qty={item.qty} refresh={reloadCart} />
+                        );
+                    })
                 }
             </div>
         </div>

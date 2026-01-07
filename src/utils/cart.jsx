@@ -7,7 +7,7 @@ export function loadCart() {
         cart = {
             orderedItems: [],
             days : 1,
-            startstartingDate: formatDate(new Date()),
+            startingDate: formatDate(new Date()),
             endingDate: formatDate(new Date())
         }
 
@@ -35,14 +35,14 @@ export function addToCart(key, qty) {
             itemFound = true; // Mark that we found the item
             break;
         }
-
-        if(!itemFound) {
-            cart.orderedItems.push({key, qty}); // Add new item to cart
-        }
-
-        const cartString = JSON.stringify(cart); // Convert updated cart to string
-        localStorage.setItem("cart", cartString); // Store updated cart in localStorage
     }
+
+    if(!itemFound) {
+        cart.orderedItems.push({key, qty}); // Add new item to cart
+    }
+
+    const cartString = JSON.stringify(cart); // Convert updated cart to string
+    localStorage.setItem("cart", cartString); // Store updated cart in localStorage
 }
 
 

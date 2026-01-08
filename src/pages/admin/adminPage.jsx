@@ -3,6 +3,7 @@ import { MdDashboard, MdBookmark, MdDevices, MdPerson } from 'react-icons/md';
 import AdminItemsPage from './adminItemsPage';
 import AddItemPage from './addItemPage';
 import UpdateItemPage from './updateItemsPage';
+import AdminUsersPage from './adminUsersPage';
 
 export default function AdminPage() {
   return (
@@ -31,7 +32,7 @@ export default function AdminPage() {
           <Route path="/dashboard" element={<h1>Dashboard</h1>} /> 
           <Route path="/bookings" element={<h1>Manage Bookings</h1>} />
           <Route path="/items" element={<AdminItemsPage />} />
-          <Route path="/users" element={<h1>Manage Users</h1>} />
+          <Route path="/users" element={<AdminUsersPage />} />
           <Route path="/addItems" element={<AddItemPage />} />
           <Route path="/updateItems" element={<UpdateItemPage />} />
         </Routes>

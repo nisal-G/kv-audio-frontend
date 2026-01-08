@@ -4,6 +4,7 @@ import AdminItemsPage from './adminItemsPage';
 import AddItemPage from './addItemPage';
 import UpdateItemPage from './updateItemsPage';
 import AdminUsersPage from './adminUsersPage';
+import AdminOrdersPage from './adminBookingPage';
 
 export default function AdminPage() {
   return (
@@ -13,9 +14,9 @@ export default function AdminPage() {
           <MdDashboard className="text-2xl" />
           <span className="text-xl font-semibold">Dashboard</span>
         </Link>
-        <Link to="/admin/bookings" className="flex items-center gap-2 mb-6 hover:opacity-80">
+        <Link to="/admin/orders" className="flex items-center gap-2 mb-6 hover:opacity-80">
           <MdBookmark className="text-2xl" />
-          <span className="text-xl font-semibold">Bookings</span>
+          <span className="text-xl font-semibold">Orders</span>
         </Link>
         <Link to="/admin/items" className="flex items-center gap-2 mb-6 hover:opacity-80">
           <MdDevices className="text-2xl" />
@@ -30,7 +31,7 @@ export default function AdminPage() {
       <div className="flex-1 h-screen bg-blue-100">
         <Routes>
           <Route path="/dashboard" element={<h1>Dashboard</h1>} /> 
-          <Route path="/bookings" element={<h1>Manage Bookings</h1>} />
+          <Route path="/orders" element={<AdminOrdersPage />} />
           <Route path="/items" element={<AdminItemsPage />} />
           <Route path="/users" element={<AdminUsersPage />} />
           <Route path="/addItems" element={<AddItemPage />} />

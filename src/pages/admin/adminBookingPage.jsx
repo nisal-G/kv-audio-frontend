@@ -30,6 +30,27 @@ export default function AdminOrdersPage() {
         }
     }, [loading]);
 
+
+    // Handle order status update
+    function handleOrderStatusChange(orderId, status) {
+
+        const token = localStorage.getItem('token');
+
+        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/orders/updateStatus`, {
+            status: status
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            console.log("Order status updated:", response.data);
+            setLoading(true); // Refresh orders
+        }).catch(error => {
+            console.error("Error updating order status:", error);
+            setLoading(false);  
+        }); 
+    }
+
     return (
         <div className="w-full h-full bg-gray-50 relative overflow-hidden flex flex-col">
             {/* Top Bar with decorative background */}
@@ -111,8 +132,8 @@ export default function AdminOrdersPage() {
                                                     <div className="flex -space-x-2 overflow-hidden items-center">
                                                         {order.orderedItems.slice(0, 3).map((item, i) => (
                                                             <div key={i} className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-gray-100 flex items-center justify-center overflow-hidden" title={item.product.name}>
-                                                                {item.product.image && item.product.image[0] ? (
-                                                                    <img src={item.product.image[0]} alt="" className="h-full w-full object-cover" />
+                                                                {item.product.image ? (
+                                                                    <img src={item.product.image} alt="" className="h-full w-full object-cover" />
                                                                 ) : (
                                                                     <span className="text-[10px] text-gray-500">?</span>
                                                                 )}
@@ -138,7 +159,7 @@ export default function AdminOrdersPage() {
                                                         }`}>
                                                         <span className={`w-1.5 h-1.5 rounded-full mr-2 ${order.isApproved ? 'bg-emerald-500' : 'bg-amber-500'
                                                             }`}></span>
-                                                        {order.isApproved ? 'Approved' : 'Pending'}
+                                                        {order.status}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -186,7 +207,7 @@ export default function AdminOrdersPage() {
                                         <div className={`w-2.5 h-2.5 rounded-full ${selectedOrder.isApproved ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
                                         <span className={`text-lg font-bold ${selectedOrder.isApproved ? 'text-green-700' : 'text-yellow-700'
                                             }`}>
-                                            {selectedOrder.isApproved ? 'Approved' : 'Pending'}
+                                            {selectedOrder.status}
                                         </span>
                                     </div>
                                 </div>
@@ -241,8 +262,8 @@ export default function AdminOrdersPage() {
                                     {selectedOrder.orderedItems.map((item, index) => (
                                         <div key={index} className="group flex items-center gap-4 p-3 pr-4 rounded-2xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-md transition-all duration-200">
                                             <div className="w-20 h-20 flex-shrink-0 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 group-hover:scale-105 transition-transform">
-                                                {item.product.image && item.product.image[0] ? (
-                                                    <img src={item.product.image[0]} alt={item.product.name} className="w-full h-full object-cover" />
+                                                {item.product.image ? (
+                                                    <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                                         <FaBoxOpen />

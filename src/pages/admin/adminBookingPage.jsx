@@ -33,10 +33,11 @@ export default function AdminOrdersPage() {
 
     // Handle order status update
     function handleOrderStatusChange(orderId, status) {
-
         const token = localStorage.getItem('token');
 
-        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/orders/updateStatus`, {
+        // Ideally we would show a loading state on the button itself, 
+        // but for now we rely on the global loading refresh after update.
+        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/orders/updateStatus/${orderId}`, {
             status: status
         }, {
             headers: {
@@ -44,11 +45,12 @@ export default function AdminOrdersPage() {
             }
         }).then(response => {
             console.log("Order status updated:", response.data);
-            setLoading(true); // Refresh orders
+            setSelectedOrder(null); // Close modal
+            setLoading(true); // Trigger re-fetch of orders
         }).catch(error => {
             console.error("Error updating order status:", error);
-            setLoading(false);  
-        }); 
+            // Optional: show error message to user
+        });
     }
 
     return (
@@ -153,11 +155,15 @@ export default function AdminOrdersPage() {
                                                     Rs. {order.totalAmount.toLocaleString()}
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border shadow-sm ${order.isApproved
-                                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                                        : 'bg-amber-50 text-amber-700 border-amber-200'
+                                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border shadow-sm ${order.status === 'Approved'
+                                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                            : order.status === 'Rejected'
+                                                                ? 'bg-red-50 text-red-700 border-red-200'
+                                                                : 'bg-amber-50 text-amber-700 border-amber-200'
                                                         }`}>
-                                                        <span className={`w-1.5 h-1.5 rounded-full mr-2 ${order.isApproved ? 'bg-emerald-500' : 'bg-amber-500'
+                                                        <span className={`w-2 h-2 rounded-full mr-2 ${order.status === 'Approved' ? 'bg-emerald-500' :
+                                                                order.status === 'Rejected' ? 'bg-red-500' :
+                                                                    'bg-amber-500'
                                                             }`}></span>
                                                         {order.status}
                                                     </span>
@@ -204,8 +210,13 @@ export default function AdminOrdersPage() {
                                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl border border-blue-100 shadow-sm">
                                     <p className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2">Order Status</p>
                                     <div className="flex items-center gap-2">
-                                        <div className={`w-2.5 h-2.5 rounded-full ${selectedOrder.isApproved ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                        <span className={`text-lg font-bold ${selectedOrder.isApproved ? 'text-green-700' : 'text-yellow-700'
+                                        <div className={`w-3 h-3 rounded-full shadow-sm ${selectedOrder.status === 'Approved' ? 'bg-emerald-500 shadow-emerald-200' :
+                                            selectedOrder.status === 'Rejected' ? 'bg-red-500 shadow-red-200' :
+                                                'bg-amber-500 shadow-amber-200'
+                                            }`}></div>
+                                        <span className={`text-lg font-bold ${selectedOrder.status === 'Approved' ? 'text-emerald-700' :
+                                            selectedOrder.status === 'Rejected' ? 'text-red-700' :
+                                                'text-amber-700'
                                             }`}>
                                             {selectedOrder.status}
                                         </span>
@@ -285,12 +296,20 @@ export default function AdminOrdersPage() {
 
                         {/* Footer */}
                         <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
-                            <button
-                                onClick={() => setSelectedOrder(null)}
-                                className="px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-all shadow-lg shadow-gray-200 hover:shadow-xl active:scale-95 duration-200"
-                            >
-                                Close Button
-                            </button>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => handleOrderStatusChange(selectedOrder.orderId, 'Rejected')}
+                                    className="px-6 py-3 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition-all border border-red-200 hover:shadow-lg active:scale-95 duration-200 flex-1 sm:flex-none"
+                                >
+                                    Reject Order
+                                </button>
+                                <button
+                                    onClick={() => handleOrderStatusChange(selectedOrder.orderId, 'Approved')}
+                                    className="px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-200 hover:shadow-xl active:scale-95 duration-200 flex-1 sm:flex-none"
+                                >
+                                    Approve Order
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

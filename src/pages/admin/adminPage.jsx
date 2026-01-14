@@ -19,7 +19,7 @@ export default function AdminPage() {
       }
     }).then(response => {
         const user = response.data;
-        if(user.role === 'admin') {
+        if(user.role === 'Admin') {
           setUserValidated(true);
         } else {
           window.location.href = '/login';

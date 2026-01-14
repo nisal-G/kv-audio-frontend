@@ -1,3 +1,4 @@
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -7,6 +8,13 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const googleLogin = useGoogleLogin(
+    {
+      onSuccess:(res) => {
+        console.log(res);
+      }
+    }
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,6 +113,19 @@ export default function Login() {
           >
             Sign In
           </button>
+
+          <button
+            type="button"
+            onClick={() => googleLogin()}
+            className="w-full mt-2 bg-white/90 hover:bg-white text-gray-800 font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-3 shadow-md hover:shadow-lg transition-all"
+          >
+            <img src="google_logo.png" alt="Google Logo" className="w-5 h-5" />
+            Sign in with Google
+          </button>
+
+
+
+
         </form>
 
         <p className="mt-8 text-sm text-gray-300">

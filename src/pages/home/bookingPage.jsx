@@ -41,6 +41,13 @@ export default function BookingPage() {
             setTotal(res.data.total);
         }).catch((error) => {
             console.error("Error fetching quote:", error);
+            // Show user-friendly error message from backend
+            if (error.response?.data?.error) {
+                toast.error(error.response.data.error);
+            } else {
+                toast.error("Unable to calculate quote. Please check your cart items.");
+            }
+            setTotal(0); // Reset total on error
         });
     }
 
@@ -67,7 +74,14 @@ export default function BookingPage() {
             toast.success("Booking created successfully!");
         }).catch((error) => {
             console.error("Error creating booking:", error);
-            toast.error("Error creating booking. Please try again.");
+            // Show specific error message from backend
+            if (error.response?.data?.error) {
+                toast.error(error.response.data.error);
+            } else if (error.response?.status === 401) {
+                toast.error("Please login to create a booking");
+            } else {
+                toast.error("Error creating booking. Please try again.");
+            }
         });
     }
 

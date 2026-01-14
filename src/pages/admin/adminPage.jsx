@@ -5,8 +5,32 @@ import AddItemPage from './addItemPage';
 import UpdateItemPage from './updateItemsPage';
 import AdminUsersPage from './adminUsersPage';
 import AdminOrdersPage from './adminBookingPage';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function AdminPage() {
+
+  const [userValidated, setUserValidated] = useState(false);
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/get`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(response => {
+        const user = response.data;
+        if(user.role === 'Admin') {
+          setUserValidated(true);
+        } else {
+          window.location.href = '/login';
+        }
+    })
+    .catch(error => {
+      console.error('Error validating user:', error);
+      window.location.href = '/login';
+    });
+  }, []);
+
   return (
     <div className="flex h-screen">
       <div className="bg-green-00 w-[300px] h-screen p-6">
@@ -29,16 +53,19 @@ export default function AdminPage() {
       </div>
 
       <div className="flex-1 h-screen bg-blue-100">
-        <Routes>
-          <Route path="/dashboard" element={<h1>Dashboard</h1>} /> 
-          <Route path="/orders" element={<AdminOrdersPage />} />
-          <Route path="/items" element={<AdminItemsPage />} />
-          <Route path="/users" element={<AdminUsersPage />} />
-          <Route path="/addItems" element={<AddItemPage />} />
-          <Route path="/updateItems" element={<UpdateItemPage />} />
-        </Routes>
+        {userValidated && (
+          <Routes path = "/*">
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} /> 
+            <Route path="/orders" element={<AdminOrdersPage />} />
+            <Route path="/items" element={<AdminItemsPage />} />
+            <Route path="/users" element={<AdminUsersPage />} />
+            <Route path="/addItems" element={<AddItemPage />} />
+            <Route path="/updateItems" element={<UpdateItemPage />} />
+          </Routes>
+        )}
       </div>
     </div>
   );
+
 }
 

@@ -8,13 +8,31 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   const googleLogin = useGoogleLogin(
     {
       onSuccess:(res) => {
         console.log(res);
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/googleLogin`, {
+          accessToken: res.access_token
+        }).then(response => {
+          toast.success("Login successful!");
+          const user = response.data.user;
+          localStorage.setItem("token", response.data.token);
+
+          if (user.role === "Admin") {
+            navigate("/admin");
+          } else {
+            navigate("/home");
+          }
+        }).catch(error => {
+          console.error("Google login failed:", error);
+          toast.error(error.response.data.error || "Google login failed. Please try again.");
+        });
       }
     }
   );
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,6 +46,14 @@ export default function Login() {
         const user = response.data.user;
         localStorage.setItem("token", response.data.token)
 
+        // Check if email is verified
+        if(user.emailVerified === false){
+          toast("Please verify your email before logging in.");
+          navigate("/verify-email");
+          return;
+        }
+
+        // Redirect based on user role
         if (user.role === "Admin") {
           navigate("/admin");
         } else {

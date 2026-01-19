@@ -11,6 +11,7 @@ export default function VerifyEmail() {
     const [isLoading, setIsLoading] = useState(false);
     const [isResending, setIsResending] = useState(false);
     const inputRefs = useRef([]);
+    const dataFetchedRef = useRef(false);
 
     // Initialize input refs
     useEffect(() => {
@@ -19,6 +20,9 @@ export default function VerifyEmail() {
 
     // Send OTP on component mount
     useEffect(() => {
+        if (dataFetchedRef.current) return;
+        dataFetchedRef.current = true;
+
         if (!token) {
             toast.error("Please login first");
             navigate("/login");

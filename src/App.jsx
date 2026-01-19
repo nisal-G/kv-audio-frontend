@@ -6,6 +6,7 @@ import AdminPage from "./pages/admin/adminPage";
 import RegisterPage from "./pages/register/register";
 import Testing from "./components/testing";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import VerifyEmail from "./pages/verifyEmail/verifyEmail";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/testing" element={<Testing />} />
           <Route path="/*" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/admin/*" element={<AdminPage />} />
         </Routes>

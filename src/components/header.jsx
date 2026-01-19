@@ -8,6 +8,7 @@ export default function Header() {
   const [navPannelOpen, setNavPannelOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,6 +112,12 @@ export default function Header() {
           >
             <GiHamburgerMenu className="text-xl" />
           </button>
+
+          {token !== null && <button className="hidden md:block absolute top-4 right-4 " onClick={() => { localStorage.removeItem("token"); 
+            window.location.href = "/login"; }}>
+            logout
+          </button>}
+
         </div>
       </div>
 

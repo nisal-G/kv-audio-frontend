@@ -1,18 +1,25 @@
+// Helper function to get the cart key based on user login status
+function getCartKey() {
+    const email = localStorage.getItem("email");
+    return email ? `cart_${email}` : "cart";
+}
+
 // Function to load the cart from localStorage or initialize a new one
 export function loadCart() {
 
-    let cart = localStorage.getItem("cart");
+    const cartKey = getCartKey();
+    let cart = localStorage.getItem(cartKey);
 
     if (cart === null) {
         cart = {
             orderedItems: [],
-            days : 1,
+            days: 1,
             startingDate: formatDate(new Date()),
             endingDate: formatDate(new Date())
         }
 
         const cartString = JSON.stringify(cart); // Convert JSON object to string
-        localStorage.setItem("cart", cartString); // Store string in localStorage
+        localStorage.setItem(cartKey, cartString); // Store string in localStorage
         return cart; // Return the cart object
     }
 
@@ -25,6 +32,7 @@ export function loadCart() {
 export function addToCart(key, qty) {
 
     const cart = loadCart(); // Load existing cart
+    const cartKey = getCartKey();
 
     let itemFound = false;
 
@@ -37,21 +45,23 @@ export function addToCart(key, qty) {
         }
     }
 
-    if(!itemFound) {
-        cart.orderedItems.push({key, qty}); // Add new item to cart
+    if (!itemFound) {
+        cart.orderedItems.push({ key, qty }); // Add new item to cart
     }
 
     const cartString = JSON.stringify(cart); // Convert updated cart to string
-    localStorage.setItem("cart", cartString); // Store updated cart in localStorage
+    localStorage.setItem(cartKey, cartString); // Store updated cart in localStorage
 }
 
 
 // Function to remove an item from the cart by its key
 export function removeFromCart(key) {
     const cart = loadCart(); // Load existing cart
+    const cartKey = getCartKey();
+
     cart.orderedItems = cart.orderedItems.filter(item => item.key !== key); // Remove item with matching key
     const cartString = JSON.stringify(cart); // Convert updated cart to string
-    localStorage.setItem("cart", cartString); // Store updated cart in localStorage
+    localStorage.setItem(cartKey, cartString); // Store updated cart in localStorage
 }
 
 
@@ -62,8 +72,3 @@ export function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
     return `${year}-${month}-${day}`;
 }
-
-
-
-
-

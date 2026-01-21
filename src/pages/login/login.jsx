@@ -11,7 +11,7 @@ export default function Login() {
 
   const googleLogin = useGoogleLogin(
     {
-      onSuccess:(res) => {
+      onSuccess: (res) => {
         console.log(res);
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/googleLogin`, {
           accessToken: res.access_token
@@ -19,6 +19,7 @@ export default function Login() {
           toast.success("Login successful!");
           const user = response.data.user;
           localStorage.setItem("token", response.data.token);
+          localStorage.setItem("email", user.email);
 
           if (user.role === "Admin") {
             navigate("/admin");
@@ -45,9 +46,10 @@ export default function Login() {
 
         const user = response.data.user;
         localStorage.setItem("token", response.data.token)
+        localStorage.setItem("email", user.email);
 
         // Check if email is verified
-        if(user.emailVerified === false){
+        if (user.emailVerified === false) {
           toast("Please verify your email before logging in.");
           navigate("/verify-email");
           return;

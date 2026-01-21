@@ -28,27 +28,25 @@ export default function Header() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
-        isScrolled 
-          ? "h-16 bg-accent/95 backdrop-blur-md shadow-lg" 
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isScrolled
+          ? "h-16 bg-accent/95 backdrop-blur-md shadow-lg"
           : "h-20 bg-accent/90 backdrop-blur-sm"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        
+
         {/* Logo Section */}
-        <Link 
-          to="/home" 
+        <Link
+          to="/home"
           className="flex items-center gap-3 group z-10"
         >
           <div className="relative">
-            <img 
-              src="/KV_Audio_Logo.png" 
-              alt="KV Audio Logo" 
-              className={`object-cover rounded-full border-2 border-white/20 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:border-white/40 group-hover:shadow-xl ${
-                isScrolled ? "w-12 h-12" : "w-16 h-16"
-              }`}
+            <img
+              src="/KV_Audio_Logo.png"
+              alt="KV Audio Logo"
+              className={`object-cover rounded-full border-2 border-white/20 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:border-white/40 group-hover:shadow-xl ${isScrolled ? "w-12 h-12" : "w-16 h-16"
+                }`}
             />
             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
@@ -63,19 +61,17 @@ export default function Header() {
             <Link
               key={link.to}
               to={link.to}
-              className={`relative px-4 lg:px-6 py-2 text-base lg:text-lg font-semibold transition-all duration-300 rounded-lg group ${
-                isActive(link.to)
+              className={`relative px-4 lg:px-6 py-2 text-base lg:text-lg font-semibold transition-all duration-300 rounded-lg group ${isActive(link.to)
                   ? "text-white"
                   : "text-white/80 hover:text-white"
-              }`}
+                }`}
             >
               <span className="relative z-10">{link.label}</span>
-              <span 
-                className={`absolute inset-0 bg-white/10 rounded-lg transition-all duration-300 ${
-                  isActive(link.to)
+              <span
+                className={`absolute inset-0 bg-white/10 rounded-lg transition-all duration-300 ${isActive(link.to)
                     ? "opacity-100 scale-100"
                     : "opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100"
-                }`}
+                  }`}
               ></span>
               {isActive(link.to) && (
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-white rounded-full"></span>
@@ -113,8 +109,10 @@ export default function Header() {
             <GiHamburgerMenu className="text-xl" />
           </button>
 
-          {token !== null && <button className="hidden md:block absolute top-4 right-4 " onClick={() => { localStorage.removeItem("token"); 
-            window.location.href = "/login"; }}>
+          {token !== null && <button className="hidden md:block absolute top-4 right-4 " onClick={() => {
+            localStorage.removeItem("token"); localStorage.removeItem("email");
+            window.location.href = "/login";
+          }}>
             logout
           </button>}
 

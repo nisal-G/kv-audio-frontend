@@ -5,33 +5,33 @@ import { removeFromCart } from "../utils/cart";
 export default function BookingItem(props) {
 
     // Extract props: itemKey (product ID), qty (quantity), refresh (callback to update parent)
-    const {itemKey, qty, refresh} = props; 
-    
+    const { itemKey, qty, refresh } = props;
+
     // State to store product details fetched from API
     const [item, setItem] = useState(null);
-    
+
     // Track loading status: "loading" | "loaded" | "error"
-    const [status, setStatus] = useState("loading"); 
+    const [status, setStatus] = useState("loading");
 
     // Fetch product details when component mounts or status changes
     useEffect(() => {
 
-            if (status === "loading") {
+        if (status === "loading") {
             const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/api/products/get/${itemKey}`
-            
+
             // Request product data from backend
             axios.get(apiUrl)
-            .then((res) => {
-                setItem(res.data)
-                setStatus("loaded")
-                console.log( res.data)
-            }).catch((error) => {
-                // If product not found or error occurs, remove from cart
-                console.error("Error fetching product data:", error)
-                setStatus("error")
-                removeFromCart(itemKey);
-                refresh(); // Refresh the cart in the parent component
-            })
+                .then((res) => {
+                    setItem(res.data)
+                    setStatus("loaded")
+                    console.log(res.data)
+                }).catch((error) => {
+                    // If product not found or error occurs, remove from cart
+                    console.error("Error fetching product data:", error)
+                    setStatus("error")
+                    removeFromCart(itemKey);
+                    refresh(); // Refresh the cart in the parent component
+                })
         }
 
 
@@ -46,13 +46,17 @@ export default function BookingItem(props) {
     // Update item quantity in localStorage and trigger parent refresh
     const updateQuantity = (newQty) => {
         if (newQty < 1) return; // Don't allow quantity less than 1
-        
-        const cart = JSON.parse(localStorage.getItem("cart"));
+
+        // Get the user-scoped cart key
+        const email = localStorage.getItem("email");
+        const cartKey = email ? `cart_${email}` : "cart";
+
+        const cart = JSON.parse(localStorage.getItem(cartKey));
         const itemIndex = cart.orderedItems.findIndex(item => item.key === itemKey);
-        
+
         if (itemIndex !== -1) {
             cart.orderedItems[itemIndex].qty = newQty;
-            localStorage.setItem("cart", JSON.stringify(cart));
+            localStorage.setItem(cartKey, JSON.stringify(cart));
             refresh();
         }
     };
@@ -100,8 +104,8 @@ export default function BookingItem(props) {
                 {/* Product Image */}
                 <div className="md:w-32 md:h-32 h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative overflow-hidden">
                     {item.image && item.image.length > 0 ? (
-                        <img 
-                            src={item.image[0]} 
+                        <img
+                            src={item.image[0]}
                             alt={item.name}
                             className="w-full h-full object-cover  hover:scale-110 transition-transform duration-500"
                         />

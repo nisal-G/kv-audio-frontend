@@ -18,30 +18,28 @@ export default function MobileNavPannel(props) {
     return (
         <>
             {/* Backdrop Overlay */}
-            <div 
-                className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${
-                    isOpen ? 'opacity-50 visible' : 'opacity-0 invisible'
-                }`}
+            <div
+                className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${isOpen ? 'opacity-50 visible' : 'opacity-0 invisible'
+                    }`}
                 onClick={() => setOpen(false)}
             />
 
             {/* Navigation Panel */}
-            <div 
-                className={`fixed top-0 right-0 h-full w-[280px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-                    isOpen ? 'translate-x-0' : 'translate-x-full'
-                }`}
+            <div
+                className={`fixed top-0 right-0 h-full w-[280px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}
             >
                 {/* Header Section */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-accent">
                     <div className="flex items-center gap-3">
-                        <img 
-                            src="/KV_Audio_Logo.png" 
-                            alt="KV Audio" 
+                        <img
+                            src="/KV_Audio_Logo.png"
+                            alt="KV Audio"
                             className="w-12 h-12 rounded-full object-cover border-2 border-white"
                         />
                         <h2 className="text-xl font-bold text-white">KV Audio</h2>
                     </div>
-                    <button 
+                    <button
                         onClick={() => setOpen(false)}
                         className="text-white hover:bg-white/20 p-2 rounded-full transition-colors duration-200"
                         aria-label="Close menu"
@@ -65,6 +63,19 @@ export default function MobileNavPannel(props) {
                             <span className="text-lg font-medium">{link.label}</span>
                         </Link>
                     ))}
+
+                    {localStorage.getItem("token") && (
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem("token");
+                                localStorage.removeItem("email");
+                                window.location.href = "/login";
+                            }}
+                            className="flex items-center gap-4 px-4 py-4 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 mt-2 w-full text-left"
+                        >
+                            <span className="text-lg font-medium">Logout</span>
+                        </button>
+                    )}
                 </nav>
 
                 {/* Footer Section */}

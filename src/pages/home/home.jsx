@@ -19,6 +19,7 @@ export default function Home() {
   const [showReviewModal, setShowReviewModal] = useState(false);
 
 
+  // Initial setup effect - runs only once on mount
   useEffect(() => {
     // Intersection Observer for scroll animations
     observerRef.current = new IntersectionObserver(
@@ -38,28 +39,24 @@ export default function Home() {
     // Fetch approved reviews on mount
     fetchApprovedReviews();
 
-    // Refresh reviews when page becomes visible (e.g., when user switches back to tab)
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        fetchApprovedReviews();
-      }
-    };
-
-    // Poll for new approved reviews every 30 seconds
-    const pollInterval = setInterval(() => {
-      fetchApprovedReviews();
-    }, 30000);
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      clearInterval(pollInterval);
     };
-  }, []);
+  }, []); // Empty dependency array - runs only once on mount
+
+  // Re-observe elements when reviews are loaded - runs when approvedReviews changes
+  useEffect(() => {
+    if (approvedReviews.length > 0 && observerRef.current) {
+      // Re-query and observe all animate-on-scroll elements (including new review elements)
+      const elements = document.querySelectorAll(".animate-on-scroll");
+      elements.forEach((el) => {
+        // Only observe if not already observed
+        observerRef.current.observe(el);
+      });
+    }
+  }, [approvedReviews]); // Runs when approvedReviews changes
 
   // Form submission handler
   const handleSubmitReview = async (e) => {
@@ -476,6 +473,14 @@ export default function Home() {
                 <div className="text-5xl mb-4 opacity-40">⭐</div>
                 <h3 className="text-xl font-semibold text-slate-800 mb-2">No Reviews Yet</h3>
                 <p className="text-slate-600 text-sm">Be the first to share your experience with KV Audio!</p>
+                <div className="mt-8 flex justify-center">
+                  <button
+                    onClick={() => setShowReviewModal(true)}
+                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-xl shadow-lg transition-all duration-300"
+                  >
+                    Add Your Review
+                  </button>
+                </div>
               </div>
             </div>
           ) : (

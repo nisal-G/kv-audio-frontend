@@ -1,4 +1,6 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Header from "../../components/header";
 import Contact from "./contactUs";
 import Home from "./home";
@@ -9,6 +11,40 @@ import ProductOverview from "./productOverview";
 import BookingPage from "./bookingPage";
 
 export default function HomePage() {
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/get`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                const user = response.data;
+                if (user.role === 'Admin') {
+                    navigate('/admin');
+                } else {
+                    setIsLoading(false);
+                }
+            }).catch(error => {
+                console.error('Error validating user:', error);
+                setIsLoading(false);
+            });
+        } else {
+            setIsLoading(false);
+        }
+    }, [navigate]);
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <div className="text-xl">Loading...</div>
+            </div>
+        );
+    }
+
     return (    
         <div className="w-full h-screen flex flex-col items-center">
             <Header />

@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { IoLogOutOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import MobileNavPannel from "./mobileNavPannel";
 
@@ -27,32 +28,50 @@ export default function Header() {
 
   const isActive = (path) => location.pathname === path;
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    window.location.href = "/login";
+  };
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isScrolled
-          ? "h-16 bg-accent/95 backdrop-blur-md shadow-lg"
-          : "h-20 bg-accent/90 backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${isScrolled
+          ? "h-16 bg-gradient-to-r from-accent via-accent/98 to-accent backdrop-blur-xl shadow-2xl shadow-accent/20"
+          : "h-20 bg-gradient-to-r from-accent/95 via-accent/93 to-accent/95 backdrop-blur-lg shadow-lg shadow-accent/10"
         }`}
     >
-      <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      {/* Subtle top border glow */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+
+      <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
 
         {/* Logo Section */}
         <Link
           to="/home"
-          className="flex items-center gap-3 group z-10"
+          className="flex items-center gap-3 group z-10 relative"
         >
           <div className="relative">
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/20 blur-xl transition-all duration-500 scale-0 group-hover:scale-150"></div>
+
             <img
               src="/KV_Audio_Logo.png"
               alt="KV Audio Logo"
-              className={`object-cover rounded-full border-2 border-white/20 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:border-white/40 group-hover:shadow-xl ${isScrolled ? "w-12 h-12" : "w-16 h-16"
+              className={`object-cover rounded-full border-2 border-white/30 shadow-xl shadow-black/20 transition-all duration-500 group-hover:scale-110 group-hover:border-white/60 group-hover:shadow-2xl group-hover:shadow-white/20 relative z-10 ${isScrolled ? "w-12 h-12" : "w-16 h-16"
                 }`}
             />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            {/* Subtle gradient overlay on logo */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/0 via-white/5 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           </div>
-          <span className="text-white font-bold text-xl sm:text-2xl tracking-wide hidden sm:block group-hover:text-white/90 transition-colors duration-200">
-            KV Audio
-          </span>
+
+          <div className="hidden sm:block">
+            <span className="text-white font-bold text-xl sm:text-2xl tracking-wide group-hover:tracking-wider transition-all duration-300 drop-shadow-lg">
+              KV Audio
+            </span>
+            <div className="h-0.5 w-0 group-hover:w-full bg-white/50 transition-all duration-300 rounded-full mt-0.5"></div>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
@@ -61,40 +80,66 @@ export default function Header() {
             <Link
               key={link.to}
               to={link.to}
-              className={`relative px-4 lg:px-6 py-2 text-base lg:text-lg font-semibold transition-all duration-300 rounded-lg group ${isActive(link.to)
+              className={`relative px-4 lg:px-6 py-2.5 text-base lg:text-lg font-semibold transition-all duration-300 rounded-xl group overflow-hidden ${isActive(link.to)
                   ? "text-white"
-                  : "text-white/80 hover:text-white"
+                  : "text-white/85 hover:text-white"
                 }`}
             >
-              <span className="relative z-10">{link.label}</span>
+              {/* Background layer */}
               <span
-                className={`absolute inset-0 bg-white/10 rounded-lg transition-all duration-300 ${isActive(link.to)
+                className={`absolute inset-0 bg-white/15 backdrop-blur-sm rounded-xl transition-all duration-300 ${isActive(link.to)
                     ? "opacity-100 scale-100"
-                    : "opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100"
+                    : "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
                   }`}
               ></span>
+
+              {/* Shimmer effect on hover */}
+              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+              </span>
+
+              <span className="relative z-10 drop-shadow-sm">{link.label}</span>
+
+              {/* Active indicator - animated underline */}
               {isActive(link.to) && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-white rounded-full"></span>
+                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-lg shadow-white/50 animate-pulse"></span>
               )}
             </Link>
           ))}
         </nav>
 
-        {/* Right Section - Cart & Menu */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* Right Section - Cart, Logout & Menu */}
+        <div className="flex items-center gap-2 sm:gap-3">
+
+          {/* Logout Button - Desktop (if logged in) */}
+          {token && (
+            <button
+              onClick={handleLogout}
+              className="hidden md:flex items-center gap-2 px-4 lg:px-5 py-2 lg:py-2.5 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl font-medium text-sm lg:text-base transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-white/10 backdrop-blur-sm border border-white/20 hover:border-white/40 group"
+              aria-label="Logout"
+            >
+              <IoLogOutOutline className="text-lg lg:text-xl group-hover:rotate-12 transition-transform duration-300" />
+              <span className="hidden lg:inline">Logout</span>
+            </button>
+          )}
+
           {/* Cart Icon - Desktop */}
           <Link
             to="/booking"
-            className="hidden md:flex items-center justify-center w-10 h-10 lg:w-11 lg:h-11 text-white bg-white/10 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg"
+            className="hidden md:flex items-center justify-center w-11 h-11 lg:w-12 lg:h-12 text-white bg-white/15 backdrop-blur-sm rounded-xl hover:bg-white/25 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-white/20 border border-white/20 hover:border-white/40 group relative overflow-hidden"
             aria-label="View cart"
           >
-            <FaCartShopping className="text-lg lg:text-xl" />
+            {/* Shine effect */}
+            <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent"></span>
+            </span>
+            <FaCartShopping className="text-lg lg:text-xl relative z-10 group-hover:scale-110 transition-transform duration-300" />
           </Link>
 
           {/* Cart Icon - Mobile */}
           <Link
             to="/booking"
-            className="md:hidden flex items-center justify-center w-10 h-10 text-white bg-white/10 rounded-full hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-md"
+            className="md:hidden flex items-center justify-center w-11 h-11 text-white bg-white/15 backdrop-blur-sm rounded-xl active:scale-95 transition-all duration-200 shadow-lg border border-white/20"
             aria-label="View cart"
           >
             <FaCartShopping className="text-lg" />
@@ -103,18 +148,11 @@ export default function Header() {
           {/* Hamburger Menu - Mobile */}
           <button
             onClick={() => setNavPannelOpen(true)}
-            className="md:hidden flex items-center justify-center w-10 h-10 text-white bg-white/10 rounded-full hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-md"
+            className="md:hidden flex items-center justify-center w-11 h-11 text-white bg-white/15 backdrop-blur-sm rounded-xl active:scale-95 transition-all duration-200 shadow-lg border border-white/20 group"
             aria-label="Open menu"
           >
-            <GiHamburgerMenu className="text-xl" />
+            <GiHamburgerMenu className="text-xl group-active:rotate-90 transition-transform duration-300" />
           </button>
-
-          {token !== null && <button className="hidden md:block absolute top-4 right-4 " onClick={() => {
-            localStorage.removeItem("token"); localStorage.removeItem("email");
-            window.location.href = "/login";
-          }}>
-            logout
-          </button>}
 
         </div>
       </div>

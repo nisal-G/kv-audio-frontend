@@ -1,10 +1,11 @@
 import { Link, Route, Routes } from 'react-router-dom';
-import { MdDashboard, MdBookmark, MdDevices, MdPerson } from 'react-icons/md';
+import { MdDashboard, MdBookmark, MdDevices, MdPerson, MdStar } from 'react-icons/md';
 import AdminItemsPage from './adminItemsPage';
 import AddItemPage from './addItemPage';
 import UpdateItemPage from './updateItemsPage';
 import AdminUsersPage from './adminUsersPage';
 import AdminOrdersPage from './adminBookingPage';
+import AdminReviewsPage from './adminReviewsPage';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -50,6 +51,10 @@ export default function AdminPage() {
           <MdPerson className="text-2xl" />
           <span className="text-xl font-semibold">Users</span>
         </Link>
+        <Link to="/admin/reviews" className="flex items-center gap-2 mb-6 hover:opacity-80">
+          <MdStar className="text-2xl" />
+          <span className="text-xl font-semibold">Reviews</span>
+        </Link>
       </div>
 
       <div className="flex-1 h-screen bg-blue-100">
@@ -59,6 +64,7 @@ export default function AdminPage() {
             <Route path="/orders" element={<AdminOrdersPage />} />
             <Route path="/items" element={<AdminItemsPage />} />
             <Route path="/users" element={<AdminUsersPage />} />
+            <Route path="/reviews" element={<AdminReviewsPage />} />
             <Route path="/addItems" element={<AddItemPage />} />
             <Route path="/updateItems" element={<UpdateItemPage />} />
           </Routes>

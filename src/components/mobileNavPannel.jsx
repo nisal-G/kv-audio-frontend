@@ -32,7 +32,6 @@ export default function MobileNavPannel(props) {
     const navLinks = [
         { to: "/home", label: "Home", icon: <FaHome /> },
         { to: "/contact", label: "Contact", icon: <FaPhone /> },
-        { to: "/gallery", label: "Gallery", icon: <FaImages /> },
         { to: "/items", label: "Items", icon: <FaBox /> },
         { to: "/booking", label: "Cart", icon: <FaShoppingCart /> }
     ];

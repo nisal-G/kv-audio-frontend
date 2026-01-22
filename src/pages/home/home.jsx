@@ -35,13 +35,29 @@ export default function Home() {
     const elements = document.querySelectorAll(".animate-on-scroll");
     elements.forEach((el) => observerRef.current.observe(el));
 
-    // Fetch approved reviews
+    // Fetch approved reviews on mount
     fetchApprovedReviews();
+
+    // Refresh reviews when page becomes visible (e.g., when user switches back to tab)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchApprovedReviews();
+      }
+    };
+
+    // Poll for new approved reviews every 30 seconds
+    const pollInterval = setInterval(() => {
+      fetchApprovedReviews();
+    }, 30000);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearInterval(pollInterval);
     };
   }, []);
 
@@ -108,15 +124,13 @@ export default function Home() {
     }, 5000);
   };
 
-  // Fetch approved reviews
+  // Fetch approved reviews (public endpoint)
   const fetchApprovedReviews = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/get`);
-      // Filter only approved reviews
-      const approved = response.data.filter(review => review.isApproved === true);
-      setApprovedReviews(approved);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/approved`);
+      setApprovedReviews(response.data);
     } catch (error) {
-      console.error("Error fetching approved reviews:", error);
+      console.error("Error fetching reviews:", error);
     }
   };
 

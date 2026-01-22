@@ -18,17 +18,17 @@ export default function AdminPage() {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     }).then(response => {
-        const user = response.data;
-        if(user.role === 'Admin') {
-          setUserValidated(true);
-        } else {
-          window.location.href = '/login';
-        }
+      const user = response.data;
+      if (user.role === 'Admin') {
+        setUserValidated(true);
+      } else {
+        window.location.href = '/login';
+      }
     })
-    .catch(error => {
-      console.error('Error validating user:', error);
-      window.location.href = '/login';
-    });
+      .catch(error => {
+        console.error('Error validating user:', error);
+        window.location.href = '/login';
+      });
   }, []);
 
   return (
@@ -54,8 +54,8 @@ export default function AdminPage() {
 
       <div className="flex-1 h-screen bg-blue-100">
         {userValidated && (
-          <Routes path = "/*">
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} /> 
+          <Routes path="/*">
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
             <Route path="/orders" element={<AdminOrdersPage />} />
             <Route path="/items" element={<AdminItemsPage />} />
             <Route path="/users" element={<AdminUsersPage />} />

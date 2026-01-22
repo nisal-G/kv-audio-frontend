@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
   const observerRef = useRef(null);
+
+  // Review form state
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState({ show: false, type: "", message: "" });
 
   useEffect(() => {
     // Intersection Observer for scroll animations
@@ -26,6 +34,68 @@ export default function Home() {
       }
     };
   }, []);
+
+  // Form submission handler
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+
+    // Validation
+    if (rating === 0) {
+      showNotification("error", "Please select a rating");
+      return;
+    }
+
+    if (comment.trim().length < 10) {
+      showNotification("error", "Comment must be at least 10 characters");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        showNotification("error", "Please log in to submit a review");
+        setIsSubmitting(false);
+        return;
+      }
+
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/reviews`,
+        { rating, comment },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      showNotification("success", "Thank you! Your review has been submitted for approval.");
+
+      // Reset form
+      setRating(0);
+      setComment("");
+
+    } catch (error) {
+      if (error.response?.status === 401) {
+        showNotification("error", "Please log in to submit a review");
+      } else if (error.response?.data?.error === "Review addition failed") {
+        showNotification("error", "You have already submitted a review");
+      } else {
+        showNotification("error", "Failed to submit review. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const showNotification = (type, message) => {
+    setNotification({ show: true, type, message });
+    setTimeout(() => {
+      setNotification({ show: false, type: "", message: "" });
+    }, 5000);
+  };
 
   const features = [
     {
@@ -218,6 +288,116 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Add Review Section */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-primary relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16 animate-on-scroll opacity-0 translate-y-4 transition-all duration-700">
+            <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wide uppercase text-accent bg-accent/10 border border-accent/20 rounded-full px-4 py-2 mb-4">
+              Share Your Experience
+            </p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text mb-4">
+              Add Your Review
+            </h2>
+            <p className="text-base sm:text-lg text-text/70 max-w-2xl mx-auto">
+              Help others by sharing your experience with our equipment and service.
+            </p>
+          </div>
+
+          <div className="animate-on-scroll opacity-0 translate-y-4 transition-all duration-700" style={{ transitionDelay: '200ms' }}>
+            <div className="bg-secondary/50 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-10 border border-text/10 shadow-2xl">
+              <form onSubmit={handleSubmitReview} className="space-y-6">
+                {/* Star Rating */}
+                <div>
+                  <label className="block text-lg font-semibold text-text mb-4">
+                    Rating <span className="text-accent">*</span>
+                  </label>
+                  <div className="flex gap-2 justify-center sm:justify-start">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="transition-all duration-200 hover:scale-110 focus:outline-none focus:scale-110"
+                      >
+                        <svg
+                          className={`w-10 h-10 sm:w-12 sm:h-12 transition-colors duration-200 ${star <= (hoverRating || rating)
+                            ? 'text-yellow-400 fill-yellow-400'
+                            : 'text-text/20 fill-none'
+                            }`}
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                          />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
+                  {rating > 0 && (
+                    <p className="text-sm text-text/60 mt-2 text-center sm:text-left">
+                      You rated: {rating} star{rating !== 1 ? 's' : ''}
+                    </p>
+                  )}
+                </div>
+
+                {/* Comment */}
+                <div>
+                  <label htmlFor="comment" className="block text-lg font-semibold text-text mb-3">
+                    Your Review <span className="text-accent">*</span>
+                  </label>
+                  <textarea
+                    id="comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Share your experience with our equipment and service... (minimum 10 characters)"
+                    rows="5"
+                    className="w-full px-4 py-3 bg-primary/50 border-2 border-text/10 rounded-xl text-text placeholder-text/40 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300 resize-none"
+                  />
+                  <p className="text-sm text-text/60 mt-2">
+                    {comment.length} characters {comment.length >= 10 && '✓'}
+                  </p>
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start pt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`group px-8 py-4 bg-gradient-to-r from-accent to-accent/90 text-white font-bold text-lg rounded-xl shadow-lg shadow-accent/30 transition-all duration-300 flex items-center justify-center gap-2 ${isSubmitting
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:shadow-xl hover:shadow-accent/40 hover:scale-105'
+                      }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        Submit Review
+                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-accent via-accent/95 to-accent/90 relative overflow-hidden">
         {/* Background Pattern */}
@@ -258,6 +438,39 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Notification Toast */}
+      {notification.show && (
+        <div className="fixed top-24 right-4 sm:right-8 z-50 animate-on-scroll opacity-0 translate-y-4 transition-all duration-700 animate-visible">
+          <div className={`max-w-sm px-6 py-4 rounded-xl shadow-2xl backdrop-blur-md border-2 flex items-start gap-3 ${notification.type === 'success'
+              ? 'bg-green-500/90 border-green-400 text-white'
+              : 'bg-red-500/90 border-red-400 text-white'
+            }`}>
+            <div className="flex-shrink-0">
+              {notification.type === 'success' ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-sm sm:text-base">{notification.message}</p>
+            </div>
+            <button
+              onClick={() => setNotification({ show: false, type: "", message: "" })}
+              className="flex-shrink-0 hover:opacity-70 transition-opacity"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* CSS for animations */}
       <style>{`

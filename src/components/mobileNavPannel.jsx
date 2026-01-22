@@ -2,12 +2,32 @@ import { Link, useLocation } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { FaHome, FaPhone, FaImages, FaBox, FaShoppingCart } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
+import { useState, useEffect } from "react";
 
 export default function MobileNavPannel(props) {
 
     const isOpen = props.isOpen;
     const setOpen = props.setOpen;
     const location = useLocation();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Check authentication status
+    useEffect(() => {
+        const checkAuth = () => {
+            const token = localStorage.getItem("token");
+            setIsAuthenticated(!!token);
+        };
+
+        // Check on mount and when panel opens
+        checkAuth();
+
+        // Listen for storage changes
+        window.addEventListener("storage", checkAuth);
+
+        return () => {
+            window.removeEventListener("storage", checkAuth);
+        };
+    }, [isOpen]);
 
     const navLinks = [
         { to: "/home", label: "Home", icon: <FaHome /> },
@@ -74,8 +94,8 @@ export default function MobileNavPannel(props) {
                             to={link.to}
                             onClick={() => setOpen(false)}
                             className={`relative flex items-center gap-4 px-5 py-4 rounded-xl transition-all duration-300 group overflow-hidden ${isActive(link.to)
-                                    ? 'bg-gradient-to-r from-accent to-accent/90 text-white shadow-lg shadow-accent/30'
-                                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-accent/10 hover:to-accent/5'
+                                ? 'bg-gradient-to-r from-accent to-accent/90 text-white shadow-lg shadow-accent/30'
+                                : 'text-gray-700 hover:bg-gradient-to-r hover:from-accent/10 hover:to-accent/5'
                                 }`}
                         >
                             {/* Background shimmer effect */}
@@ -84,8 +104,8 @@ export default function MobileNavPannel(props) {
                             )}
 
                             <span className={`text-xl transition-all duration-300 relative z-10 ${isActive(link.to)
-                                    ? 'scale-110 drop-shadow-lg'
-                                    : 'group-hover:scale-110'
+                                ? 'scale-110 drop-shadow-lg'
+                                : 'group-hover:scale-110'
                                 }`}>
                                 {link.icon}
                             </span>
@@ -102,8 +122,9 @@ export default function MobileNavPannel(props) {
                         </Link>
                     ))}
 
-                    {/* Logout Button */}
-                    {localStorage.getItem("token") && (
+                    {/* Auth Button */}
+                    {isAuthenticated ? (
+                        // Logout Button (if logged in)
                         <button
                             onClick={() => {
                                 localStorage.removeItem("token");
@@ -118,6 +139,21 @@ export default function MobileNavPannel(props) {
                             <IoLogOutOutline className="text-xl relative z-10 group-hover:rotate-12 transition-transform duration-300" />
                             <span className="text-base font-semibold relative z-10">Logout</span>
                         </button>
+                    ) : (
+                        // Login Button (if not logged in)
+                        <Link
+                            to="/login"
+                            onClick={() => setOpen(false)}
+                            className="relative flex items-center gap-4 px-5 py-4 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-xl transition-all duration-300 mt-3 shadow-lg hover:shadow-xl hover:shadow-blue-500/30 active:scale-95 group overflow-hidden"
+                        >
+                            {/* Shine effect */}
+                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+
+                            <svg className="w-5 h-5 relative z-10 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            <span className="text-base font-semibold relative z-10">Login</span>
+                        </Link>
                     )}
                 </nav>
 

@@ -8,8 +8,26 @@ import MobileNavPannel from "./mobileNavPannel";
 export default function Header() {
   const [navPannelOpen, setNavPannelOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
-  const token = localStorage.getItem("token");
+
+  // Check authentication status on mount and storage changes
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token);
+    };
+
+    // Initial check
+    checkAuth();
+
+    // Listen for storage changes (e.g., login/logout in another tab)
+    window.addEventListener("storage", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,8 +55,8 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${isScrolled
-          ? "h-16 bg-gradient-to-r from-accent via-accent/98 to-accent backdrop-blur-xl shadow-2xl shadow-accent/20"
-          : "h-20 bg-gradient-to-r from-accent/95 via-accent/93 to-accent/95 backdrop-blur-lg shadow-lg shadow-accent/10"
+        ? "h-16 bg-gradient-to-r from-accent via-accent/98 to-accent backdrop-blur-xl shadow-2xl shadow-accent/20"
+        : "h-20 bg-gradient-to-r from-accent/95 via-accent/93 to-accent/95 backdrop-blur-lg shadow-lg shadow-accent/10"
         }`}
     >
       {/* Subtle top border glow */}
@@ -81,15 +99,15 @@ export default function Header() {
               key={link.to}
               to={link.to}
               className={`relative px-4 lg:px-6 py-2.5 text-base lg:text-lg font-semibold transition-all duration-300 rounded-xl group overflow-hidden ${isActive(link.to)
-                  ? "text-white"
-                  : "text-white/85 hover:text-white"
+                ? "text-white"
+                : "text-white/85 hover:text-white"
                 }`}
             >
               {/* Background layer */}
               <span
                 className={`absolute inset-0 bg-white/15 backdrop-blur-sm rounded-xl transition-all duration-300 ${isActive(link.to)
-                    ? "opacity-100 scale-100"
-                    : "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
                   }`}
               ></span>
 
@@ -108,11 +126,12 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Right Section - Cart, Logout & Menu */}
+        {/* Right Section - Auth Buttons, Cart & Menu */}
         <div className="flex items-center gap-2 sm:gap-3">
 
-          {/* Logout Button - Desktop (if logged in) */}
-          {token && (
+          {/* Auth Buttons - Desktop */}
+          {isAuthenticated ? (
+            // Logout Button (if logged in)
             <button
               onClick={handleLogout}
               className="hidden md:flex items-center gap-2 px-4 lg:px-5 py-2 lg:py-2.5 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl font-medium text-sm lg:text-base transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-white/10 backdrop-blur-sm border border-white/20 hover:border-white/40 group"
@@ -121,6 +140,18 @@ export default function Header() {
               <IoLogOutOutline className="text-lg lg:text-xl group-hover:rotate-12 transition-transform duration-300" />
               <span className="hidden lg:inline">Logout</span>
             </button>
+          ) : (
+            // Login Button (if not logged in)
+            <Link
+              to="/login"
+              className="hidden md:flex items-center gap-2 px-4 lg:px-5 py-2 lg:py-2.5 text-white bg-white/20 hover:bg-white/30 rounded-xl font-semibold text-sm lg:text-base transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-white/10 backdrop-blur-sm border border-white/30 hover:border-white/50 group"
+              aria-label="Login"
+            >
+              <svg className="w-4 h-4 lg:w-5 lg:h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              <span className="hidden lg:inline">Login</span>
+            </Link>
           )}
 
           {/* Cart Icon - Desktop */}

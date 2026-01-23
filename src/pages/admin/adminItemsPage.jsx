@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { CiCirclePlus } from "react-icons/ci";
 import { MdEdit, MdDelete, MdInventory } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,22 +37,63 @@ export default function AdminItemsPage() {
 
 
   const handleDelete = (key) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      const token = localStorage.getItem("token");
-      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/delete/${key}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      }).then(
-        (res) => {
-          console.log(res.data);
-          setItems(items.filter((item) => item.key !== key));
-          setItemsLoaded(false);
-        }
-      ).catch(
-        (err) => {
-          console.error(err);
-        }
-      );
-    }
+    toast((t) => (
+      <div className="flex flex-col items-center gap-4 min-w-[300px] p-4">
+        <div className="text-gray-800 font-medium text-lg text-center">
+          Are you sure you want to delete this item?
+        </div>
+        <p className="text-gray-500 text-sm text-center">
+          This action cannot be undone.
+        </p>
+        <div className="flex gap-3 w-full mt-2">
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+            }}
+            className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium border border-gray-200"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              performDelete(key);
+            }}
+            className="flex-1 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium shadow-md shadow-red-500/20"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: Infinity,
+      position: 'top-center',
+      style: {
+        background: '#fff',
+        color: '#333',
+        borderRadius: '16px',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      },
+    });
+  };
+
+  const performDelete = (key) => {
+    const token = localStorage.getItem("token");
+    axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/delete/${key}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then(
+      (res) => {
+        console.log(res.data);
+        setItems(items.filter((item) => item.key !== key));
+        setItemsLoaded(false);
+        toast.success("Item deleted successfully!");
+      }
+    ).catch(
+      (err) => {
+        console.error(err);
+        toast.error("Failed to delete item.");
+      }
+    );
   };
 
 
@@ -134,8 +176,8 @@ export default function AdminItemsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border shadow-sm ${item.availability
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              : 'bg-red-50 text-red-700 border-red-200'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-red-50 text-red-700 border-red-200'
                             }`}>
                             <span className={`w-2 h-2 rounded-full mr-2 ${item.availability ? 'bg-emerald-500' : 'bg-red-500'
                               }`}></span>

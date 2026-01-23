@@ -5,81 +5,92 @@ export default function ProductCard(props) {
   const item = props.item;
 
   return (
-    <div className="w-full max-w-[380px] mx-auto h-[500px] bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:scale-[1.02] group">
-      {/* Image Section */}
-      <div className="relative w-full h-[240px] bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+    <div className="group w-full max-w-[400px] mx-auto h-auto bg-white/85 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-secondary/40 hover:scale-[1.04] hover:-translate-y-2 hover:border-accent/30">
+      {/* Image Section with Gradient Overlay */}
+      <div className="relative w-full h-[280px] bg-gradient-to-br from-secondary/40 to-accent/15 overflow-hidden">
         {item.image && item.image.length > 0 ? (
-          <img
-            src={item.image[0]}
-            alt={item.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          <>
+            <img
+              src={item.image[0]}
+              alt={item.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+            {/* Subtle gradient overlay for better badge visibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg className="w-24 h-24 text-secondary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
         )}
 
-        {/* Availability Badge */}
-        <div className={`absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-sm ${item.availability
-          ? 'bg-green-500/95 text-white shadow-lg shadow-green-500/30'
-          : 'bg-red-500/95 text-white shadow-lg shadow-red-500/30'
+        {/* Availability Badge with Glassmorphism */}
+        <div className={`absolute top-4 right-4 px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md border transition-all duration-300 ${item.availability
+          ? 'bg-emerald-500/95 text-white border-emerald-300/60 shadow-lg shadow-emerald-500/50 group-hover:shadow-xl group-hover:scale-110'
+          : 'bg-red-500/95 text-white border-red-300/60 shadow-lg shadow-red-500/50'
           }`}>
-          {item.availability ? '✓ In Stock' : '✗ Out of Stock'}
+          {item.availability ? (
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              In Stock
+            </span>
+          ) : (
+            '✗ Out of Stock'
+          )}
         </div>
 
-        {/* Category Badge */}
-        <div className="absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-blue-500 text-white capitalize shadow-lg shadow-blue-600/30 backdrop-blur-sm">
+        {/* Category Badge with Enhanced Design */}
+        <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-accent via-accent/95 to-accent/85 text-white capitalize shadow-lg shadow-accent/50 backdrop-blur-md border border-white/30 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300">
           {item.category}
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="p-6 flex flex-col h-[260px]">
+      <div className="p-6 flex flex-col bg-gradient-to-br from-white via-white to-primary/40">
         {/* Product Name */}
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">
+        <h3 className="text-xl font-bold text-text mb-3 line-clamp-2 min-h-[56px] leading-tight group-hover:text-accent transition-colors duration-300">
           {item.name}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 min-h-[40px] flex-grow-0">
+        <p className="text-text/70 text-sm mb-4 line-clamp-3 min-h-[60px] leading-relaxed">
           {item.description || 'No description available'}
         </p>
 
-        {/* Dimensions */}
+        {/* Dimensions with Icon */}
         {item.dimensions && (
-          <div className="flex items-center text-sm text-gray-500 mb-4">
-            <svg className="w-4 h-4 mr-2 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center text-sm text-text/60 mb-5 px-3 py-2 rounded-xl bg-secondary/40 backdrop-blur-sm group-hover:bg-secondary/50 transition-colors duration-300">
+            <svg className="w-4 h-4 mr-2 flex-shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
-            <span className="truncate">{item.dimensions}</span>
+            <span className="truncate font-medium">{item.dimensions}</span>
           </div>
         )}
 
-        {/* Price Section */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-          <div>
-            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Price</p>
-            <p className="text-2xl font-bold text-green-600 mt-0.5">
-              ${item.price.toLocaleString()}
+        {/* Price & CTA Section */}
+        <div className="flex items-center justify-between pt-5 border-t border-secondary/40 mt-auto gap-4">
+          <div className="flex-shrink-0">
+            <p className="text-xs text-text/50 font-semibold uppercase tracking-wider mb-1">Price</p>
+            <p className="text-3xl font-black text-accent">
+              <span className="text-lg align-top">Rs.</span>{item.price.toLocaleString()}
             </p>
           </div>
 
           {/* View Details Button */}
           <Link to={"/product/" + item.key}
-            className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center gap-2 ${item.availability
-              ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 hover:scale-105'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            className={`px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 flex items-center gap-2 whitespace-nowrap ${item.availability
+              ? 'bg-gradient-to-r from-accent via-accent/95 to-accent/90 hover:from-accent/95 hover:via-accent hover:to-accent text-white shadow-lg shadow-accent/40 hover:shadow-xl hover:shadow-accent/60 hover:scale-110 active:scale-95'
+              : 'bg-secondary/50 text-text/40 cursor-not-allowed border border-secondary/60'
               }`}
             disabled={!item.availability}
           >
             {item.availability ? (
               <>
                 View
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </>
             ) : (

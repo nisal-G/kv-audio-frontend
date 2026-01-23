@@ -19,6 +19,7 @@ export default function Home() {
   const [showReviewModal, setShowReviewModal] = useState(false);
 
 
+  // Initial setup effect - runs only once on mount
   useEffect(() => {
     // Intersection Observer for scroll animations
     observerRef.current = new IntersectionObserver(
@@ -38,28 +39,24 @@ export default function Home() {
     // Fetch approved reviews on mount
     fetchApprovedReviews();
 
-    // Refresh reviews when page becomes visible (e.g., when user switches back to tab)
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        fetchApprovedReviews();
-      }
-    };
-
-    // Poll for new approved reviews every 30 seconds
-    const pollInterval = setInterval(() => {
-      fetchApprovedReviews();
-    }, 30000);
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      clearInterval(pollInterval);
     };
-  }, []);
+  }, []); // Empty dependency array - runs only once on mount
+
+  // Re-observe elements when reviews are loaded - runs when approvedReviews changes
+  useEffect(() => {
+    if (approvedReviews.length > 0 && observerRef.current) {
+      // Re-query and observe all animate-on-scroll elements (including new review elements)
+      const elements = document.querySelectorAll(".animate-on-scroll");
+      elements.forEach((el) => {
+        // Only observe if not already observed
+        observerRef.current.observe(el);
+      });
+    }
+  }, [approvedReviews]); // Runs when approvedReviews changes
 
   // Form submission handler
   const handleSubmitReview = async (e) => {
@@ -202,8 +199,20 @@ export default function Home() {
     <div className="min-h-screen w-full bg-primary text-text">
       {/* Hero Section */}
       <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-accent via-accent/95 to-accent/90">
+        
+        {/* Hero Background Image */}
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="/home-hero.png.png"
+            alt="KV Audio Hero"
+            className="w-full h-full object-cover"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/15 to-white/30"></div>
+        </div>
+
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
             backgroundSize: '40px 40px'
@@ -262,7 +271,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-primary">
+      <section className="py-16 sm:py-20 lg:py-24 bg-primary relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16 animate-on-scroll opacity-0 translate-y-4 transition-all duration-700">
             <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wide uppercase text-accent bg-accent/10 border border-accent/20 rounded-full px-4 py-2 mb-4">
@@ -276,26 +285,47 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="animate-on-scroll opacity-0 translate-y-4 transition-all duration-700 group"
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="h-full bg-secondary/50 backdrop-blur-sm rounded-2xl p-6 lg:p-8 border border-text/10 hover:border-accent/30 hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:-translate-y-2">
-                  <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-text mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-text/70 leading-relaxed">
-                    {feature.description}
-                  </p>
+          {/* Feature Image with Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16 items-center">
+            {/* Image Section with Watermark Removal */}
+            <div className="animate-on-scroll opacity-0 translate-y-4 transition-all duration-700 relative">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-secondary/30">
+                <div style={{
+                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 100px), calc(100% - 100px) 100%, 0 100%)'
+                }}>
+                  <img
+                    src="/home-feature.png.png"
+                    alt="KV Audio Equipment"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                {/* Gradient overlay for depth */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent pointer-events-none"></div>
               </div>
-            ))}
+            </div>
+
+            {/* Feature Highlights */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6">
+              {features.slice(0, 4).map((feature, index) => (
+                <div
+                  key={index}
+                  className="animate-on-scroll opacity-0 translate-y-4 transition-all duration-700 group"
+                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <div className="h-full bg-secondary/50 backdrop-blur-sm rounded-2xl p-5 lg:p-6 border border-text/10 hover:border-accent/30 hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:-translate-y-2">
+                    <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                      {feature.icon}
+                    </div>
+                    <h3 className="text-lg font-bold text-text mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-text/70 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -476,6 +506,14 @@ export default function Home() {
                 <div className="text-5xl mb-4 opacity-40">⭐</div>
                 <h3 className="text-xl font-semibold text-slate-800 mb-2">No Reviews Yet</h3>
                 <p className="text-slate-600 text-sm">Be the first to share your experience with KV Audio!</p>
+                <div className="mt-8 flex justify-center">
+                  <button
+                    onClick={() => setShowReviewModal(true)}
+                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-xl shadow-lg transition-all duration-300"
+                  >
+                    Add Your Review
+                  </button>
+                </div>
               </div>
             </div>
           ) : (

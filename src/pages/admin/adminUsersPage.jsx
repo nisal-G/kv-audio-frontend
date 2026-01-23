@@ -1,12 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { MdPerson, MdSearch, MdFilterList, MdBlock, MdCheckCircle, MdMoreVert, MdDelete } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function AdminUsersPage() {
 
-     const [users, setUsers] = useState([]);
-     const [loading, setLoading] = useState(true);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
-     useEffect(() => {
+    useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -16,220 +19,233 @@ export default function AdminUsersPage() {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                
+
                 console.log(response.data);
                 setUsers(response.data);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching users:', error);
                 setLoading(false);
+                toast.error("Failed to load users");
             }
         };
 
-        if(loading){
+        if (loading) {
             fetchUsers();
         }
-     }, [loading]);
+    }, [loading]);
 
 
-     // Function to block a user
-     function handleBlockUser (email) {
+    // Function to block a user
+    function handleBlockUser(email) {
 
         const token = localStorage.getItem('token');
+        const userToUpdate = users.find(u => u.email === email);
+        const action = userToUpdate.isBlocked ? "unblocked" : "blocked";
 
-        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/block/${email}`,  {}, {
+        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/block/${email}`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then(response => {
             console.log(response.data);
+            toast.success(`User ${action} successfully`);
             setLoading(true);
         }).catch(error => {
             console.error('Error blocking user:', error);
+            toast.error(`Failed to ${action} user`);
         });
-     }
+    }
 
-
+    // Filter users based on search
+    const filteredUsers = users.filter(user =>
+        user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
-                {/* Header Section */}
-                <div className="mb-8">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-4xl font-bold text-gray-900 mb-2">User Management</h1>
-                            <p className="text-gray-600">Manage and monitor all registered users</p>
+        <div className="w-full h-full bg-gray-50 relative overflow-hidden flex flex-col">
+            {/* Top Bar with decorative background */}
+            <div className="w-full h-[300px] bg-gradient-to-r from-blue-600 to-blue-800 absolute top-0 left-0 z-0 rounded-b-[40px] shadow-lg"></div>
+
+            <div className="relative z-10 w-full h-full p-4 md:p-8 flex flex-col">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                        <MdPerson className="text-white/80" />
+                        User Management
+                        <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm border border-white/10">
+                            {users.length} users
+                        </span>
+                    </h1>
+
+                    {/* Search Bar */}
+                    <div className="relative group w-full md:w-96">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <MdSearch className="text-blue-200 group-focus-within:text-white transition-colors text-xl" />
                         </div>
-                        <div className="hidden md:flex items-center space-x-4">
-                            <div className="bg-white rounded-lg shadow-sm px-6 py-3 border border-gray-200">
-                                <p className="text-sm text-gray-500">Total Users</p>
-                                <p className="text-2xl font-bold text-blue-600">{users.length}</p>
-                            </div>
-                        </div>
+                        <input
+                            type="text"
+                            className="block w-full pl-10 pr-3 py-3 border border-blue-400/30 rounded-xl leading-5 bg-white/10 text-white placeholder-blue-200 focus:outline-none focus:bg-white/20 focus:ring-1 focus:ring-white/50 focus:border-white/50 sm:text-sm backdrop-blur-sm transition-all shadow-sm"
+                            placeholder="Search users by name or email..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
                 </div>
-                
+
                 {loading ? (
-                    <div className="flex flex-col justify-center items-center h-96 bg-white rounded-2xl shadow-lg">
-                        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mb-4"></div>
-                        <p className="text-gray-600 font-medium">Loading users...</p>
-                    </div>
-                ) : users.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-2xl shadow-lg border border-gray-100">
-                        <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <p className="text-gray-500 text-xl font-medium">No users found</p>
-                        <p className="text-gray-400 text-sm mt-2">Users will appear here once they register</p>
+                    <div className="flex-1 flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            <p className="text-white/80 font-medium">Loading users...</p>
+                        </div>
                     </div>
                 ) : (
-                    <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700">
-                                    <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                                            User Information
-                                        </th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                                            Phone
-                                        </th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                                            Address
-                                        </th>
-                                        <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
-                                            Role
-                                        </th>
-                                        <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
-                                            Status
-                                        </th>
-                                        <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {users.map((user, index) => (
-                                        <tr 
-                                            key={user._id} 
-                                            className="hover:bg-blue-50 transition-all duration-200 ease-in-out"
-                                        >
-                                            <td className="px-6 py-5 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className="flex-shrink-0 h-14 w-14">
-                                                        <img 
-                                                            className="h-14 w-14 rounded-full object-cover ring-2 ring-blue-500 ring-offset-2 shadow-md" 
-                                                            src={user.profilePicture} 
-                                                            alt={`${user.firstName} ${user.lastName}`}
-                                                        />
-                                                    </div>
-                                                    <div className="ml-4">
-                                                        <div className="text-sm font-bold text-gray-900">
-                                                            {user.firstName} {user.lastName}
-                                                        </div>
-                                                        <div className="text-sm text-gray-500 flex items-center mt-1">
-                                                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                                            </svg>
-                                                            {user.email}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-5 whitespace-nowrap">
-                                                <div className="flex items-center text-sm text-gray-900">
-                                                    <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                                    </svg>
-                                                    {user.phone}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-5 max-w-xs">
-                                                <div className="text-sm text-gray-900 flex items-start">
-                                                    <svg className="w-4 h-4 mr-2 mt-0.5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                                                    </svg>
-                                                    <span className="line-clamp-2">{user.address}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-5 whitespace-nowrap text-center">
-                                                <span className={`px-4 py-2 inline-flex items-center text-xs font-bold rounded-full shadow-sm ${
-                                                    user.role === 'Admin' 
-                                                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white' 
-                                                        : 'bg-gradient-to-r from-green-500 to-green-600 text-white'
-                                                }`}>
-                                                    {user.role === 'Admin' ? (
-                                                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                        </svg>
-                                                    ) : (
-                                                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                                                        </svg>
-                                                    )}
-                                                    {user.role}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-5 whitespace-nowrap text-center">
-                                                <span className={`px-4 py-2 inline-flex items-center text-xs font-bold rounded-full ${
-                                                    user.isBlocked 
-                                                        ? 'bg-red-100 text-red-800' 
-                                                        : 'bg-green-100 text-green-800'
-                                                }`}>
-                                                    <span className={`w-2 h-2 rounded-full mr-2 ${
-                                                        user.isBlocked ? 'bg-red-500' : 'bg-green-500'
-                                                    }`}></span>
-                                                    {user.isBlocked ? 'Blocked' : 'Active'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-5 whitespace-nowrap text-center">
-                                                <button 
-                                                    onClick={() => handleBlockUser(user.email)} 
-                                                    className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg ${
-                                                        user.isBlocked 
-                                                            ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white' 
-                                                            : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
-                                                    }`}
-                                                >
-                                                    {user.isBlocked ? (
-                                                        <span className="flex items-center">
-                                                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                            </svg>
-                                                            Unblock
-                                                        </span>
-                                                    ) : (
-                                                        <span className="flex items-center">
-                                                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
-                                                            </svg>
-                                                            Block
-                                                        </span>
-                                                    )}
-                                                </button>
-                                            </td>
+                    <div className="flex-1 bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col animate-in fade-in-50 duration-500">
+                        {users.length === 0 ? (
+                            <div className="flex-1 flex flex-col items-center justify-center text-center p-10">
+                                <div className="w-24 h-24 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                                    <MdPerson size={40} />
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-800 mb-2">No users found</h3>
+                                <p className="text-gray-500 max-w-sm">Users will appear here once they register.</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-auto custom-scrollbar flex-1">
+                                <table className="w-full">
+                                    <thead className="sticky top-0 bg-gray-50/95 backdrop-blur-sm z-20 shadow-sm">
+                                        <tr>
+                                            {['User', 'Status', 'Role', 'Contact Info', 'Location', 'Actions'].map((header) => (
+                                                <th key={header} className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider first:pl-8">
+                                                    {header}
+                                                </th>
+                                            ))}
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-t border-gray-200">
-                            <div className="flex items-center justify-between">
-                                <p className="text-sm text-gray-600 flex items-center">
-                                    <svg className="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                                    </svg>
-                                    Showing <span className="font-bold mx-1">{users.length}</span> registered users
-                                </p>
-                                <p className="text-xs text-gray-500">Last updated: {new Date().toLocaleString()}</p>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {filteredUsers.length > 0 ? filteredUsers.map((user) => (
+                                            <tr
+                                                key={user._id}
+                                                className="group hover:bg-blue-50/50 transition-all duration-200"
+                                            >
+                                                <td className="px-6 py-4 whitespace-nowrap first:pl-8">
+                                                    <div className="flex items-center">
+                                                        <div className="flex-shrink-0 h-10 w-10">
+                                                            <img
+                                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-md group-hover:scale-110 transition-transform duration-300"
+                                                                src={user.profilePicture}
+                                                                alt={`${user.firstName}`}
+                                                                onError={(e) => {
+                                                                    e.target.onerror = null;
+                                                                    e.target.src = `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random`
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="ml-4">
+                                                            <div className="text-sm font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
+                                                                {user.firstName} {user.lastName}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500">
+                                                                Joined {new Date().toLocaleDateString()} {/* Assuming date field exists or just mockup */}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${user.isBlocked
+                                                            ? 'bg-red-50 text-red-700 border-red-100'
+                                                            : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                                        }`}>
+                                                        <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${user.isBlocked ? 'bg-red-500' : 'bg-emerald-500'
+                                                            }`}></span>
+                                                        {user.isBlocked ? 'Blocked' : 'Active'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className={`px-2 py-1 text-xs font-semibold rounded-md border ${user.role === 'Admin'
+                                                            ? 'bg-purple-50 text-purple-700 border-purple-100'
+                                                            : 'bg-blue-50 text-blue-700 border-blue-100'
+                                                        }`}>
+                                                        {user.role}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm text-gray-900">{user.email}</span>
+                                                        <span className="text-xs text-gray-500">{user.phone}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className="text-sm text-gray-500 max-w-[150px] truncate block" title={user.address}>
+                                                        {user.address}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <button
+                                                        onClick={() => handleBlockUser(user.email)}
+                                                        className={`group/btn relative inline-flex items-center justify-center p-2 rounded-lg transition-all duration-200 ${user.isBlocked
+                                                                ? 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
+                                                                : 'text-red-400 hover:bg-red-50 hover:text-red-600'
+                                                            }`}
+                                                        title={user.isBlocked ? "Unblock User" : "Block User"}
+                                                    >
+                                                        {user.isBlocked ? (
+                                                            <MdCheckCircle size={20} />
+                                                        ) : (
+                                                            <MdBlock size={20} />
+                                                        )}
+                                                        <span className="absolute right-full mr-2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                                            {user.isBlocked ? "Unblock" : "Block"}
+                                                        </span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )) : (
+                                            <tr>
+                                                <td colSpan="6" className="px-6 py-10 text-center text-gray-500">
+                                                    No users found matching "{searchTerm}"
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                            <p className="text-xs text-gray-500">
+                                Showing <span className="font-semibold text-gray-900">{filteredUsers.length}</span> users
+                            </p>
+                            <div className="flex gap-2">
+                                {/* Pagination placeholders if needed in future */}
+                                <button className="px-3 py-1 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm opacity-50 cursor-not-allowed">Previous</button>
+                                <button className="px-3 py-1 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm opacity-50 cursor-not-allowed">Next</button>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
+
+            {/* Custom scrollbar styles */}
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 8px;
+                    height: 8px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #cbd5e1;
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #94a3b8;
+                    border-radius: 10px;
+                }
+            `}</style>
         </div>
     )
 }

@@ -10,10 +10,10 @@ import VerifyEmail from "./pages/verifyEmail/verifyEmail";
 
 function App() {
   return (
-    <GoogleOAuthProvider  clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <BrowserRouter>
-      <Toaster position="top-right" reverseOrder={false} />
-        <Routes path="/*">
+        <Toaster position="top-right" reverseOrder={false} />
+        <Routes>
           <Route path="/testing" element={<Testing />} />
           <Route path="/*" element={<HomePage />} />
           <Route path="/login" element={<Login />} />

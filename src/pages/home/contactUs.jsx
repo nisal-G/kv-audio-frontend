@@ -98,10 +98,10 @@ export default function ContactUs() {
                     Tap to call us (mobile-friendly).
                   </p>
                   <a
-                    href="tel:+94000000000"
+                    href="tel:+94701533894"
                     className="mt-4 inline-flex text-base font-bold text-accent hover:text-accent/80 underline underline-offset-4 decoration-accent/40 hover:decoration-accent transition-all duration-300"
                   >
-                    +94 00 000 0000
+                    +94 70 153 3894
                   </a>
                 </div>
               </div>
@@ -140,10 +140,10 @@ export default function ContactUs() {
                     Visit us for demos and pickups.
                   </p>
                   <p className="mt-4 text-base font-bold text-text">
-                    KV Audio, Your City, Sri Lanka
+                    KV Audio, Gampaha, Sri Lanka
                   </p>
                   <a
-                    href="https://www.google.com/maps"
+                    href="https://www.google.com/maps/place/Gampaha,+Sri+Lanka"
                     target="_blank"
                     rel="noreferrer"
                     className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent hover:text-accent/80 underline underline-offset-4 decoration-accent/40 hover:decoration-accent transition-all duration-300"

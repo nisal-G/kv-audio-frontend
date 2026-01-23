@@ -214,7 +214,7 @@ export default function AboutUs() {
                                 <div className="text-5xl mb-6">🎯</div>
                                 <h3 className="text-2xl sm:text-3xl font-bold text-text mb-4">Our Mission</h3>
                                 <p className="text-text/70 leading-relaxed text-base sm:text-lg">
-                                    To empower events and productions with professional-grade audio equipment, exceptional service, and expert support—making premium sound accessible to everyone, from first-time renters to seasoned professionals.
+                                    To empower events and productions with professional-grade audio equipment, exceptional service, and expert support - making premium sound accessible to everyone, from first-time renters to seasoned professionals.
                                 </p>
                             </div>
                         </div>
@@ -225,7 +225,7 @@ export default function AboutUs() {
                                 <div className="text-5xl mb-6">🌟</div>
                                 <h3 className="text-2xl sm:text-3xl font-bold text-text mb-4">Our Vision</h3>
                                 <p className="text-text/70 leading-relaxed text-base sm:text-lg">
-                                    To be the leading audio rental solution, recognized for innovation, reliability, and customer satisfaction—continuously expanding our offerings and setting new standards in the industry.
+                                    To be the leading audio rental solution, recognized for innovation, reliability, and customer satisfaction - continuously expanding our offerings and setting new standards in the industry.
                                 </p>
                             </div>
                         </div>

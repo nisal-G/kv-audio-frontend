@@ -199,16 +199,16 @@ export default function Home() {
     <div className="min-h-screen w-full bg-primary text-text">
       {/* Hero Section */}
       <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-accent via-accent/95 to-accent/90">
-        
+
         {/* Hero Background Image */}
         <div className="absolute inset-0 w-full h-full">
           <img
-            src="/home-hero.png.png"
+            src="/home-hero.png"
             alt="KV Audio Hero"
             className="w-full h-full object-cover"
           />
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/15 to-white/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60"></div>
         </div>
 
         {/* Background Pattern */}
@@ -226,18 +226,18 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 text-center">
           <div className="animate-on-scroll opacity-0 translate-y-4 transition-all duration-700">
-            <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wide uppercase text-white/90 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 mb-6">
+            <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wide uppercase text-white bg-white/25 backdrop-blur-md border border-white/40 rounded-full px-4 py-2 mb-6" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
               <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
               Professional Audio Equipment Rental
             </p>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5)' }}>
               Premium Audio Gear
               <br />
-              <span className="text-white/90">For Your Next Event</span>
+              <span className="text-white">For Your Next Event</span>
             </h1>
 
-            <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-white max-w-3xl mx-auto mb-10 leading-relaxed font-medium" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.4)' }}>
               High-quality audio equipment and event gear at your fingertips. Browse, book, and bring your events to life with KV Audio.
             </p>
 

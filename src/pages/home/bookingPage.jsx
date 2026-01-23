@@ -174,38 +174,38 @@ export default function BookingPage() {
     }
 
     return (
-        <main className="min-h-screen w-full bg-gradient-to-br from-primary via-primary to-secondary/20 text-text pt-24 pb-16">
+        <main className="min-h-screen w-full bg-gradient-to-br from-primary via-primary to-secondary/20 text-text pt-20 sm:pt-24 pb-12 sm:pb-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header */}
-                <section className="mb-8 sm:mb-12">
-                    <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-accent bg-accent/10 border border-accent/20 rounded-full px-4 py-2 backdrop-blur-sm shadow-sm shadow-accent/10">
+                <section className="mb-6 sm:mb-8 md:mb-12">
+                    <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-accent bg-accent/10 border border-accent/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm shadow-sm shadow-accent/10">
                         <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
                         </svg>
                         Your Booking
                     </div>
-                    <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-text">
+                    <h1 className="mt-4 sm:mt-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-text">
                         Create Your Booking
                     </h1>
-                    <p className="mt-3 text-base sm:text-lg text-text/60 max-w-3xl leading-relaxed">
+                    <p className="mt-3 text-sm sm:text-base md:text-lg text-text/60 max-w-3xl leading-relaxed">
                         Review your selected items, choose your rental period, and confirm your booking.
                     </p>
                 </section>
 
                 {/* Date Selection Section */}
-                <div className="w-full max-w-5xl mx-auto mb-10">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-6 sm:p-8 border border-secondary/30">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center shadow-lg shadow-accent/30">
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-full max-w-5xl mx-auto mb-8 sm:mb-10">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-6 md:p-8 border border-secondary/30">
+                        <div className="flex items-center gap-2 sm:gap-3 mb-5 sm:mb-6">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center shadow-lg shadow-accent/30">
+                                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-black text-text">Rental Period</h2>
+                            <h2 className="text-xl sm:text-2xl font-black text-text">Rental Period</h2>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6">
                             {/* Start Date */}
                             <div className="flex flex-col">
                                 <label htmlFor="startDate" className="text-sm font-bold text-text/80 mb-2 uppercase tracking-wide">
@@ -217,7 +217,7 @@ export default function BookingPage() {
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
                                     min={today}
-                                    className="px-5 py-4 border-2 border-secondary/40 rounded-2xl focus:ring-2 focus:ring-accent focus:border-accent transition duration-300 text-text bg-white/50 hover:bg-white cursor-pointer font-semibold shadow-sm hover:shadow-md"
+                                    className="min-h-[48px] px-4 sm:px-5 py-3 sm:py-4 border-2 border-secondary/40 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-accent focus:border-accent transition duration-300 text-text bg-white/50 hover:bg-white cursor-pointer font-semibold shadow-sm hover:shadow-md text-base"
                                 />
                             </div>
 
@@ -232,18 +232,18 @@ export default function BookingPage() {
                                     value={endDate}
                                     onChange={(e) => setEndDate(e.target.value)}
                                     min={startDate || today}
-                                    className="px-5 py-4 border-2 border-secondary/40 rounded-2xl focus:ring-2 focus:ring-accent focus:border-accent transition duration-300 text-text bg-white/50 hover:bg-white cursor-pointer font-semibold shadow-sm hover:shadow-md"
+                                    className="min-h-[48px] px-4 sm:px-5 py-3 sm:py-4 border-2 border-secondary/40 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-accent focus:border-accent transition duration-300 text-text bg-white/50 hover:bg-white cursor-pointer font-semibold shadow-sm hover:shadow-md text-base"
                                 />
                             </div>
                         </div>
 
                         {/* Days Display */}
-                        <div className="p-5 bg-gradient-to-r from-accent/10 via-accent/5 to-transparent rounded-2xl border border-accent/20 backdrop-blur-sm">
-                            <div className="flex items-center justify-between">
-                                <span className="text-text/80 font-bold">Total Rental Duration:</span>
+                        <div className="p-4 sm:p-5 bg-gradient-to-r from-accent/10 via-accent/5 to-transparent rounded-xl sm:rounded-2xl border border-accent/20 backdrop-blur-sm">
+                            <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2">
+                                <span className="text-sm sm:text-base text-text/80 font-bold">Total Rental Duration:</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-4xl font-black text-accent">{totalDays}</span>
-                                    <span className="text-text/70 font-bold">{totalDays === 1 ? 'day' : 'days'}</span>
+                                    <span className="text-3xl sm:text-4xl font-black text-accent">{totalDays}</span>
+                                    <span className="text-sm sm:text-base text-text/70 font-bold">{totalDays === 1 ? 'day' : 'days'}</span>
                                 </div>
                             </div>
                         </div>
@@ -284,9 +284,9 @@ export default function BookingPage() {
 
                 {/* Total and Booking Button */}
                 {cart.orderedItems.length > 0 && (
-                    <div className="w-full max-w-5xl mx-auto mb-16">
-                        <div className="bg-gradient-to-r from-accent to-accent/90 rounded-3xl shadow-2xl shadow-accent/40 p-6 sm:p-8 border border-accent/30">
-                            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className="w-full max-w-5xl mx-auto mb-12 sm:mb-16">
+                        <div className="bg-gradient-to-r from-accent to-accent/90 rounded-2xl sm:rounded-3xl shadow-2xl shadow-accent/40 p-5 sm:p-6 md:p-8 border border-accent/30">
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6">
                                 <div>
                                     <p className="text-white/80 text-sm font-bold uppercase tracking-wider mb-1">Total Quote</p>
                                     <p className="text-4xl sm:text-5xl font-black text-white">
@@ -295,7 +295,7 @@ export default function BookingPage() {
                                 </div>
                                 <button
                                     onClick={handleBookingCreation}
-                                    className="px-8 py-4 bg-white text-accent rounded-2xl font-black text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl w-full sm:w-auto"
+                                    className="w-full sm:w-auto min-h-[52px] px-8 py-4 bg-white text-accent rounded-xl sm:rounded-2xl font-black text-base sm:text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl"
                                 >
                                     Create Booking
                                 </button>

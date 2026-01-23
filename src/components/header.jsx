@@ -9,13 +9,17 @@ export default function Header() {
   const [navPannelOpen, setNavPannelOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const location = useLocation();
 
   // Check authentication status on mount and storage changes
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
       setIsAuthenticated(!!token);
+      setUserEmail(email || "");
     };
 
     // Initial check
@@ -29,6 +33,14 @@ export default function Header() {
     };
   }, []);
 
+  // Extract first name from email (before @)
+  const getUserDisplayName = () => {
+    if (!userEmail) return "";
+    const name = userEmail.split("@")[0];
+    // Capitalize first letter and replace dots/underscores with spaces
+    return name.charAt(0).toUpperCase() + name.slice(1).replace(/[._]/g, " ");
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -39,6 +51,7 @@ export default function Header() {
 
   const navLinks = [
     { to: "/home", label: "Home" },
+    { to: "/about", label: "About Us" },
     { to: "/contact", label: "Contact" },
     { to: "/items", label: "Items" },
   ];
@@ -130,15 +143,66 @@ export default function Header() {
 
           {/* Auth Buttons - Desktop */}
           {isAuthenticated ? (
-            // Logout Button (if logged in)
-            <button
-              onClick={handleLogout}
-              className="hidden md:flex items-center gap-2 px-4 lg:px-5 py-2.5 text-white/95 hover:text-white bg-white/10 hover:bg-white/15 rounded-xl font-medium text-sm lg:text-[15px] tracking-tight transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-white/5 backdrop-blur-sm border border-white/15 hover:border-white/25 group"
-              aria-label="Logout"
-            >
-              <IoLogOutOutline className="text-lg lg:text-xl group-hover:rotate-12 transition-transform duration-300" />
-              <span className="hidden lg:inline">Logout</span>
-            </button>
+            // Profile Icon with Dropdown (if logged in)
+            <div className="hidden md:block relative">
+              <button
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="flex items-center justify-center w-11 h-11 lg:w-12 lg:h-12 bg-white/12 backdrop-blur-sm rounded-full hover:bg-white/18 hover:scale-105 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-white/5 border-2 border-white/25 hover:border-white/35 group relative overflow-hidden"
+                aria-label="Profile menu"
+              >
+                {/* Profile Icon Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full"></div>
+
+                {/* User Initial */}
+                <span className="text-white font-bold text-base lg:text-lg relative z-10 group-hover:scale-110 transition-transform duration-300">
+                  {getUserDisplayName().charAt(0).toUpperCase()}
+                </span>
+              </button>
+
+              {/* Dropdown Menu */}
+              {profileDropdownOpen && (
+                <>
+                  {/* Backdrop to close dropdown */}
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  ></div>
+
+                  {/* Dropdown Content */}
+                  <div className="absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* User Info Section */}
+                    <div className="p-5 bg-gradient-to-br from-gray-50 to-white border-b border-gray-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg">
+                          <span className="text-white font-bold text-xl">
+                            {getUserDisplayName().charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-gray-900 font-bold text-base truncate">
+                            {getUserDisplayName()}
+                          </p>
+                          <p className="text-gray-500 text-sm truncate">
+                            {userEmail}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Logout Button */}
+                    <div className="p-3">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-xl transition-all duration-200 group"
+                      >
+                        <IoLogOutOutline className="text-xl group-hover:rotate-12 transition-transform duration-300" />
+                        <span className="font-medium">Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           ) : (
             // Login Button (if not logged in)
             <Link

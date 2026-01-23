@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
-import { FaHome, FaPhone, FaImages, FaBox, FaShoppingCart } from "react-icons/fa";
+import { FaHome, FaPhone, FaImages, FaBox, FaShoppingCart, FaInfoCircle } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 
@@ -10,12 +10,15 @@ export default function MobileNavPannel(props) {
     const setOpen = props.setOpen;
     const location = useLocation();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userEmail, setUserEmail] = useState("");
 
     // Check authentication status
     useEffect(() => {
         const checkAuth = () => {
             const token = localStorage.getItem("token");
+            const email = localStorage.getItem("email");
             setIsAuthenticated(!!token);
+            setUserEmail(email || "");
         };
 
         // Check on mount and when panel opens
@@ -29,8 +32,17 @@ export default function MobileNavPannel(props) {
         };
     }, [isOpen]);
 
+    // Extract first name from email (before @)
+    const getUserDisplayName = () => {
+        if (!userEmail) return "";
+        const name = userEmail.split("@")[0];
+        // Capitalize first letter and replace dots/underscores with spaces
+        return name.charAt(0).toUpperCase() + name.slice(1).replace(/[._]/g, " ");
+    };
+
     const navLinks = [
         { to: "/home", label: "Home", icon: <FaHome /> },
+        { to: "/about", label: "About Us", icon: <FaInfoCircle /> },
         { to: "/contact", label: "Contact", icon: <FaPhone /> },
         { to: "/items", label: "Items", icon: <FaBox /> },
         { to: "/booking", label: "Cart", icon: <FaShoppingCart /> }
@@ -123,21 +135,41 @@ export default function MobileNavPannel(props) {
 
                     {/* Auth Button */}
                     {isAuthenticated ? (
-                        // Logout Button (if logged in)
-                        <button
-                            onClick={() => {
-                                localStorage.removeItem("token");
-                                localStorage.removeItem("email");
-                                window.location.href = "/login";
-                            }}
-                            className="relative flex items-center gap-4 px-5 py-4 text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl transition-all duration-300 mt-3 shadow-lg hover:shadow-xl hover:shadow-red-500/30 active:scale-95 group overflow-hidden"
-                        >
-                            {/* Shine effect */}
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+                        // User Profile Card with Logout (if logged in)
+                        <div className="relative flex flex-col gap-3 px-5 py-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl mt-3 shadow-lg overflow-hidden">
+                            {/* User Info Section */}
+                            <div className="flex items-center gap-3">
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg ring-4 ring-white">
+                                    <span className="text-white font-bold text-2xl">
+                                        {getUserDisplayName().charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-gray-900 font-bold text-base truncate">
+                                        {getUserDisplayName()}
+                                    </p>
+                                    <p className="text-gray-500 text-sm truncate max-w-[180px]">
+                                        {userEmail}
+                                    </p>
+                                </div>
+                            </div>
 
-                            <IoLogOutOutline className="text-xl relative z-10 group-hover:rotate-12 transition-transform duration-300" />
-                            <span className="text-base font-semibold relative z-10">Logout</span>
-                        </button>
+                            {/* Divider */}
+                            <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+
+                            {/* Logout Button */}
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    localStorage.removeItem("email");
+                                    window.location.href = "/login";
+                                }}
+                                className="relative flex items-center justify-center gap-3 px-5 py-3 text-gray-700 hover:text-red-600 bg-gray-100 hover:bg-red-50 border border-gray-200 hover:border-red-200 rounded-xl transition-all duration-300 active:scale-95 group"
+                            >
+                                <IoLogOutOutline className="text-xl group-hover:rotate-12 transition-transform duration-300" />
+                                <span className="text-sm font-semibold">Logout</span>
+                            </button>
+                        </div>
                     ) : (
                         // Login Button (if not logged in)
                         <Link

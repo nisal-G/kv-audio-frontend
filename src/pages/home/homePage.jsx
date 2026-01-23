@@ -7,6 +7,7 @@ import Contact from "./contactUs";
 import Home from "./home";
 import Gallery from "./gallery";
 import Items from "./items";
+import AboutUs from "./aboutUs";
 import ErrorNotFound from "./error";
 import ProductOverview from "./productOverview";
 import BookingPage from "./bookingPage";
@@ -54,6 +55,7 @@ export default function HomePage() {
                 <Routes path="/*">
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/home" element={<Home />} />
+                    <Route path="/about" element={<AboutUs />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/items" element={<Items />} />
                     <Route path="/product/:key" element={<ProductOverview />} />

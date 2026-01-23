@@ -22,7 +22,7 @@ export default function Login() {
           localStorage.setItem("email", user.email);
 
           if (user.role === "Admin") {
-            navigate("/admin");
+            navigate("/admin/dashboard");
           } else {
             navigate("/home");
           }
@@ -57,7 +57,7 @@ export default function Login() {
 
         // Redirect based on user role
         if (user.role === "Admin") {
-          navigate("/admin");
+          navigate("/admin/dashboard");
         } else {
           navigate("/home");
         }

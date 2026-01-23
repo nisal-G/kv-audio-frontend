@@ -1,5 +1,5 @@
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import { MdDashboard, MdBookmark, MdDevices, MdPerson, MdStar, MdMenu, MdClose } from 'react-icons/md';
+import { Link, Route, Routes, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { MdDashboard, MdBookmark, MdDevices, MdPerson, MdStar, MdMenu, MdClose, MdLogout } from 'react-icons/md';
 import AdminItemsPage from './adminItemsPage';
 import AddItemPage from './addItemPage';
 import UpdateItemPage from './updateItemsPage';
@@ -38,7 +38,7 @@ function DashboardOverview() {
           })
         ]);
 
-        const pendingOrders = ordersRes.data.filter(order => order.status === 'Pending').length;
+        const pendingOrders = ordersRes.data.filter(order => order.status === 'Pending' || order.status === 'pending').length;
         const pendingReviews = reviewsRes.data.filter(review => !review.isApproved).length;
 
         setStats({
@@ -189,6 +189,13 @@ export default function AdminPage() {
   const [userValidated, setUserValidated] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    navigate("/login");
+  };
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/get`, {
@@ -243,12 +250,17 @@ export default function AdminPage() {
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <MdDashboard className="text-white" size={24} />
-              </div>
+              <img
+                src="/KV_Audio_Logo.png"
+                alt="KV Audio Admin"
+                className="w-12 h-12 object-contain drop-shadow-md"
+              />
               <div>
-                <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-                <p className="text-xs text-blue-300">KV Audio</p>
+                <h2 className="text-xl font-bold text-white tracking-wide">KV AUDIO</h2>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <p className="text-xs text-blue-200 font-medium tracking-wider uppercase">Admin Panel</p>
+                </div>
               </div>
             </div>
             <button
@@ -298,10 +310,13 @@ export default function AdminPage() {
 
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-white/10">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-            <p className="text-white/90 font-semibold text-sm mb-1">Admin Access</p>
-            <p className="text-white/60 text-xs">Full system privileges</p>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-200 hover:text-white hover:bg-red-500/10 rounded-xl transition-all duration-200 group"
+          >
+            <MdLogout className="text-xl group-hover:scale-110 transition-transform" />
+            <span className="font-semibold">Logout</span>
+          </button>
         </div>
       </div>
 
@@ -335,6 +350,7 @@ export default function AdminPage() {
               <Route path="/reviews" element={<AdminReviewsPage />} />
               <Route path="/addItems" element={<AddItemPage />} />
               <Route path="/updateItems" element={<UpdateItemPage />} />
+              <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
             </Routes>
           )}
         </div>

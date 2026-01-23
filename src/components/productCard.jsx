@@ -5,9 +5,9 @@ export default function ProductCard(props) {
   const item = props.item;
 
   return (
-    <div className="group w-full max-w-[400px] mx-auto h-auto bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-secondary/30 hover:scale-[1.03] hover:-translate-y-2">
+    <div className="group w-full max-w-[400px] mx-auto h-auto bg-white/85 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-secondary/40 hover:scale-[1.04] hover:-translate-y-2 hover:border-accent/30">
       {/* Image Section with Gradient Overlay */}
-      <div className="relative w-full h-[280px] bg-gradient-to-br from-secondary/30 to-accent/10 overflow-hidden">
+      <div className="relative w-full h-[280px] bg-gradient-to-br from-secondary/40 to-accent/15 overflow-hidden">
         {item.image && item.image.length > 0 ? (
           <>
             <img
@@ -16,7 +16,7 @@ export default function ProductCard(props) {
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
             {/* Subtle gradient overlay for better badge visibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -28,8 +28,8 @@ export default function ProductCard(props) {
 
         {/* Availability Badge with Glassmorphism */}
         <div className={`absolute top-4 right-4 px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md border transition-all duration-300 ${item.availability
-          ? 'bg-emerald-500/90 text-white border-emerald-400/50 shadow-lg shadow-emerald-500/40 group-hover:shadow-xl group-hover:scale-105'
-          : 'bg-red-500/90 text-white border-red-400/50 shadow-lg shadow-red-500/40'
+          ? 'bg-emerald-500/95 text-white border-emerald-300/60 shadow-lg shadow-emerald-500/50 group-hover:shadow-xl group-hover:scale-110'
+          : 'bg-red-500/95 text-white border-red-300/60 shadow-lg shadow-red-500/50'
           }`}>
           {item.availability ? (
             <span className="flex items-center gap-1.5">
@@ -42,13 +42,13 @@ export default function ProductCard(props) {
         </div>
 
         {/* Category Badge with Enhanced Design */}
-        <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-accent to-accent/80 text-white capitalize shadow-lg shadow-accent/40 backdrop-blur-md border border-white/20 group-hover:scale-105 transition-transform duration-300">
+        <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-accent via-accent/95 to-accent/85 text-white capitalize shadow-lg shadow-accent/50 backdrop-blur-md border border-white/30 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300">
           {item.category}
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="p-6 flex flex-col bg-gradient-to-br from-white to-primary/50">
+      <div className="p-6 flex flex-col bg-gradient-to-br from-white via-white to-primary/40">
         {/* Product Name */}
         <h3 className="text-xl font-bold text-text mb-3 line-clamp-2 min-h-[56px] leading-tight group-hover:text-accent transition-colors duration-300">
           {item.name}
@@ -61,7 +61,7 @@ export default function ProductCard(props) {
 
         {/* Dimensions with Icon */}
         {item.dimensions && (
-          <div className="flex items-center text-sm text-text/60 mb-5 px-3 py-2 rounded-xl bg-secondary/30 backdrop-blur-sm">
+          <div className="flex items-center text-sm text-text/60 mb-5 px-3 py-2 rounded-xl bg-secondary/40 backdrop-blur-sm group-hover:bg-secondary/50 transition-colors duration-300">
             <svg className="w-4 h-4 mr-2 flex-shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
@@ -81,7 +81,7 @@ export default function ProductCard(props) {
           {/* View Details Button */}
           <Link to={"/product/" + item.key}
             className={`px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 flex items-center gap-2 whitespace-nowrap ${item.availability
-              ? 'bg-gradient-to-r from-accent to-accent/90 hover:from-accent hover:to-accent text-white shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/50 hover:scale-110 active:scale-95'
+              ? 'bg-gradient-to-r from-accent via-accent/95 to-accent/90 hover:from-accent/95 hover:via-accent hover:to-accent text-white shadow-lg shadow-accent/40 hover:shadow-xl hover:shadow-accent/60 hover:scale-110 active:scale-95'
               : 'bg-secondary/50 text-text/40 cursor-not-allowed border border-secondary/60'
               }`}
             disabled={!item.availability}

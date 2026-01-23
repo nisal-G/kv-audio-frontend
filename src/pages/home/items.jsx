@@ -44,7 +44,7 @@ export default function Items() {
   }, [items, selectedCategory]);
 
   return (
-    <main className="min-h-[calc(100vh-80px)] w-full bg-gradient-to-br from-primary via-primary to-secondary/20 text-text pt-24 pb-16">
+    <main className="min-h-[calc(100vh-80px)] w-full bg-gradient-to-br from-primary via-primary to-secondary/30 text-text pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <section className="mb-8 sm:mb-12">
@@ -54,10 +54,10 @@ export default function Items() {
             </svg>
             Browse our collection
           </div>
-          <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-text bg-gradient-to-r from-text to-text/70 bg-clip-text">
+          <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-text bg-gradient-to-r from-text to-text/80 bg-clip-text">
             Items & Equipment
           </h1>
-          <p className="mt-3 text-base sm:text-lg text-text/60 max-w-3xl leading-relaxed">
+          <p className="mt-4 text-base sm:text-lg text-text/65 max-w-3xl leading-relaxed">
             High-quality audio and event gear ready for your next booking. Browse by category and tap an item to view full details.
           </p>
         </section>
@@ -80,8 +80,8 @@ export default function Items() {
                 <button
                   onClick={() => setSelectedCategory("all")}
                   className={`flex-shrink-0 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 border-2 backdrop-blur-sm ${selectedCategory === "all"
-                    ? "bg-gradient-to-r from-accent to-accent/90 text-white border-accent shadow-xl shadow-accent/40 scale-105 -translate-y-0.5"
-                    : "bg-white/70 text-text border-secondary/40 hover:bg-white hover:border-accent/30 hover:scale-105 hover:shadow-lg"
+                    ? "bg-gradient-to-r from-accent via-accent/95 to-accent/90 text-white border-accent shadow-xl shadow-accent/50 scale-105 -translate-y-0.5"
+                    : "bg-white/75 text-text border-secondary/40 hover:bg-white hover:border-accent/40 hover:scale-105 hover:shadow-lg"
                     }`}
                 >
                   All <span className="ml-2 text-xs opacity-90 font-black">({items.length})</span>
@@ -93,8 +93,8 @@ export default function Items() {
                     key={category.name}
                     onClick={() => setSelectedCategory(category.name)}
                     className={`flex-shrink-0 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 border-2 capitalize backdrop-blur-sm ${selectedCategory === category.name
-                      ? "bg-gradient-to-r from-accent to-accent/90 text-white border-accent shadow-xl shadow-accent/40 scale-105 -translate-y-0.5"
-                      : "bg-white/70 text-text border-secondary/40 hover:bg-white hover:border-accent/30 hover:scale-105 hover:shadow-lg"
+                      ? "bg-gradient-to-r from-accent via-accent/95 to-accent/90 text-white border-accent shadow-xl shadow-accent/50 scale-105 -translate-y-0.5"
+                      : "bg-white/75 text-text border-secondary/40 hover:bg-white hover:border-accent/40 hover:scale-105 hover:shadow-lg"
                       }`}
                   >
                     {category.name} <span className="ml-2 text-xs opacity-90 font-black">({category.count})</span>
@@ -141,7 +141,7 @@ export default function Items() {
 
           {/* Items grid with animation */}
           {state === "success" && filteredItems.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 sm:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 lg:gap-10">
               {filteredItems.map((item, index) => (
                 <div
                   key={item._id}

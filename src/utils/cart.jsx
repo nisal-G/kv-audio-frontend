@@ -65,6 +65,7 @@ export function removeFromCart(key) {
 }
 
 
+
 // Function to format a Date object as 'YYYY-MM-DD'
 export function formatDate(date) {
     const year = date.getFullYear();
@@ -72,3 +73,17 @@ export function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
     return `${year}-${month}-${day}`;
 }
+
+
+// Function to clear the entire cart
+export function clearCart() {
+    const cartKey = getCartKey();
+    const emptyCart = {
+        orderedItems: [],
+        days: 1,
+        startingDate: formatDate(new Date()),
+        endingDate: formatDate(new Date())
+    };
+    localStorage.setItem(cartKey, JSON.stringify(emptyCart));
+}
+

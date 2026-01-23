@@ -10,8 +10,6 @@ A modern, responsive, and feature-rich web application for KV Audio, a professio
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
-- [Key Components](#key-components)
-- [Pages](#pages)
 - [Authentication](#authentication)
 - [Deployment](#deployment)
 
@@ -84,7 +82,7 @@ The KV Audio Frontend is a cutting-edge React-based single-page application (SPA
 
 - Node.js (v18 or higher)
 - npm or yarn package manager
-- Running backend API (see [backend README](../kv-audio-backend/README.md))
+- Running backend API (see [backend README](https://github.com/nisal-G/kv-audio-backend#))
 - Google OAuth credentials (for Google login)
 
 ### Installation
@@ -214,171 +212,6 @@ Routes are defined in `App.jsx`:
 - `/register` - User registration
 - `/verify-email` - Email verification
 - `/admin/*` - Admin dashboard and sub-routes
-
----
-
-## 🧩 Key Components
-
-### Header Component
-- Responsive navigation bar
-- User profile display when logged in
-- Mobile-friendly hamburger menu
-- Logo and branding
-- Dynamic menu items based on auth status
-
-### Footer Component
-- Company information
-- Quick links to important pages
-- Contact details
-- Social media links
-- Copyright information
-
-### Product Card
-- Product image gallery
-- Product information display
-- Price and availability
-- Call-to-action buttons
-- Responsive grid layout
-
-### Booking Item
-- Rental item details
-- Date range selection
-- Quantity management
-- Price calculation
-- Add to cart functionality
-
-### Mobile Navigation Panel
-- Slide-out navigation menu
-- Touch-friendly interface
-- Smooth animations
-- User profile integration
-
-### Image Slider
-- Carousel for product images
-- Touch/swipe support
-- Responsive design
-- Navigation controls
-
----
-
-## 📄 Pages
-
-### Public Pages
-
-#### Home (`/`)
-- Hero section with call-to-action
-- Featured products showcase
-- Customer reviews display
-- Company highlights
-- Responsive design
-
-#### Products (`/items`)
-- Product catalog with grid layout
-- Search and filter functionality
-- Product cards with images
-- Category navigation
-
-#### Product Overview (`/items/:key`)
-- Detailed product information
-- Image gallery
-- Specifications and dimensions
-- Rental booking button
-- Related products
-
-#### About Us (`/about`)
-- Company mission and vision
-- Team information
-- Values and commitment
-- Professional imagery
-
-#### Contact Us (`/contact`)
-- Contact form with validation
-- Location information
-- Business hours
-- Email and phone details
-
-#### Gallery (`/gallery`)
-- Image showcase
-- Project highlights
-- Event photos
-
-### Authentication Pages
-
-#### Login (`/login`)
-- Email/password authentication
-- Google OAuth integration
-- "Remember me" functionality
-- Password visibility toggle
-- Link to registration
-- Professional background imagery
-
-#### Register (`/register`)
-- User registration form
-- Input validation
-- Password strength requirements
-- Terms and conditions
-- Automatic email verification trigger
-
-#### Email Verification (`/verify-email`)
-- OTP input interface
-- Resend OTP functionality
-- Countdown timer
-- Success/error handling
-
-### Customer Pages
-
-#### Booking Page (`/booking`)
-- Product selection
-- Date range picker
-- Rental period calculation
-- Total price display
-- Order submission
-- Booking confirmation
-
-### Admin Pages
-
-#### Admin Dashboard (`/admin`)
-- Overview statistics
-- Quick access to management sections
-- Recent activities
-- System notifications
-- Professional layout
-
-#### Product Management (`/admin/items`)
-- Product list with search
-- Edit/delete actions
-- Stock status
-- Quick filters
-
-#### Add Product (`/admin/add-item`)
-- Product creation form
-- Multiple image upload
-- Category selection
-- Validation
-
-#### Update Product (`/admin/update-item/:key`)
-- Edit product details
-- Update images
-- Modify availability
-- Save changes
-
-#### Order Management (`/admin/bookings`)
-- Order list with filters
-- Approval/rejection workflow
-- Status updates
-- Customer information
-
-#### Review Management (`/admin/reviews`)
-- Review moderation queue
-- Approve/reject reviews
-- Delete inappropriate content
-- Customer details
-
-#### User Management (`/admin/users`)
-- User list with search
-- Block/unblock users
-- View user details
-- Role management
 
 ---
 
@@ -524,16 +357,6 @@ npm run lint
 
 ---
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
 ## 📄 License
 
 This project is proprietary and confidential.
@@ -542,7 +365,7 @@ This project is proprietary and confidential.
 
 ## 🔗 Related Projects
 
-- [KV Audio Backend API](../kv-audio-backend/README.md)
+- [KV Audio Backend API](https://github.com/nisal-G/kv-audio-backend#)
 
 ---
 
@@ -550,7 +373,7 @@ This project is proprietary and confidential.
 
 For support or inquiries:
 - Submit an inquiry through the Contact Us page
-- Contact the development team directly
+- Contact me directly
 
 ---
 

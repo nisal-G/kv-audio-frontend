@@ -84,10 +84,10 @@ export default function AboutUs() {
     ];
 
     const stats = [
-        { number: "10+", label: "Years of Experience" },
-        { number: "500+", label: "Happy Customers" },
-        { number: "200+", label: "Quality Equipment" },
-        { number: "1000+", label: "Successful Events" }
+        { number: "3+", label: "Years of Experience" },
+        { number: "200+", label: "Happy Customers" },
+        { number: "80+", label: "Quality Equipment" },
+        { number: "350+", label: "Successful Events" }
     ];
 
     return (

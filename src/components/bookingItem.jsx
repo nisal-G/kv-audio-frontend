@@ -99,19 +99,19 @@ export default function BookingItem(props) {
 
     // Render the booking item card with image, details, quantity controls, and remove button
     return (
-        <div className="w-[75%] bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden mb-4">
-            <div className="flex flex-col md:flex-row items-stretch">
+        <div className="w-full max-w-5xl bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-secondary/30 overflow-hidden mb-4">
+            <div className="flex flex-col sm:flex-row items-stretch">
                 {/* Product Image */}
-                <div className="md:w-32 md:h-32 h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative overflow-hidden">
+                <div className="w-full sm:w-32 h-40 sm:h-32 bg-gradient-to-br from-secondary/20 to-accent/10 flex-shrink-0 relative overflow-hidden">
                     {item.image && item.image.length > 0 ? (
                         <img
                             src={item.image[0]}
                             alt={item.name}
-                            className="w-full h-full object-cover  hover:scale-110 transition-transform duration-500"
+                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-secondary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
@@ -119,11 +119,12 @@ export default function BookingItem(props) {
                     {/* Availability Badge */}
                     <div className="absolute top-2 left-2">
                         {item.availability ? (
-                            <span className="px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-full shadow-sm">
+                            <span className="px-2.5 py-1 bg-emerald-500/95 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                                 Available
                             </span>
                         ) : (
-                            <span className="px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-full shadow-sm">
+                            <span className="px-2.5 py-1 bg-red-500/95 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
                                 Unavailable
                             </span>
                         )}
@@ -131,21 +132,21 @@ export default function BookingItem(props) {
                 </div>
 
                 {/* Product Details */}
-                <div className="flex-1 p-4 md:p-5">
+                <div className="flex-1 p-4 sm:p-5">
                     <div className="flex flex-col h-full justify-between">
                         <div>
                             {/* Product Name and Category */}
-                            <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-start justify-between mb-2 sm:mb-3">
                                 <div className="flex-1">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-1 line-clamp-1">
+                                    <h3 className="text-base sm:text-lg font-bold text-text mb-1.5 sm:mb-2 line-clamp-1">
                                         {item.name}
                                     </h3>
                                     <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 capitalize">
+                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent capitalize border border-accent/20">
                                             {item.category}
                                         </span>
                                         {item.dimensions && (
-                                            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                                            <span className="inline-flex items-center gap-1 text-xs text-text/60 font-medium">
                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                                                 </svg>
@@ -158,64 +159,64 @@ export default function BookingItem(props) {
 
                             {/* Description */}
                             {item.description && (
-                                <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                                <p className="text-sm text-text/70 line-clamp-2 mb-3 leading-relaxed">
                                     {item.description}
                                 </p>
                             )}
                         </div>
 
                         {/* Price and Quantity Section */}
-                        <div className="flex items-center justify-between gap-4 pt-3 border-t border-gray-100">
-                            <div className="flex items-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-secondary/20">
+                            <div className="flex flex-col xs:flex-row items-start xs:items-center gap-3 xs:gap-4 w-full sm:w-auto">
                                 {/* Quantity */}
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm font-medium text-gray-600">Qty:</span>
-                                    <div className="flex items-center gap-1 bg-gray-100 rounded-lg overflow-hidden">
+                                    <span className="text-sm font-bold text-text/70">Qty:</span>
+                                    <div className="flex items-center gap-0.5 bg-secondary/10 rounded-lg overflow-hidden border border-secondary/30">
                                         <button
                                             onClick={handleDecreaseQty}
                                             disabled={qty <= 1}
-                                            className="px-3 py-2 hover:bg-gray-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                            className="min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center hover:bg-secondary/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
                                             title="Decrease quantity"
                                         >
-                                            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-4 h-4 text-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" />
                                             </svg>
                                         </button>
-                                        <span className="text-sm font-bold text-gray-900 min-w-[2rem] text-center">{qty}</span>
+                                        <span className="text-sm font-bold text-text min-w-[2.5rem] text-center">{qty}</span>
                                         <button
                                             onClick={handleIncreaseQty}
-                                            className="px-3 py-2 hover:bg-gray-200 transition-colors"
+                                            className="min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center hover:bg-secondary/30 transition-colors active:scale-95"
                                             title="Increase quantity"
                                         >
-                                            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-4 h-4 text-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
                                             </svg>
                                         </button>
                                     </div>
                                 </div>
 
-                                {/* Price */}
+                                {/* Unit Price */}
                                 <div className="flex flex-col">
-                                    <span className="text-xs text-gray-500">Unit Price</span>
-                                    <span className="text-sm font-semibold text-gray-900">
-                                        Rs. {item.price.toFixed(2)}
+                                    <span className="text-xs text-text/50 font-semibold">Unit Price</span>
+                                    <span className="text-sm font-bold text-text">
+                                        Rs. {item.price.toLocaleString()}
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Total Price */}
-                            <div className="flex items-center gap-3">
-                                <div className="text-right">
-                                    <span className="text-xs text-gray-500 block">Total</span>
-                                    <span className="text-xl font-bold text-purple-600">
-                                        Rs. {totalPrice.toFixed(2)}
+                            {/* Total Price and Remove */}
+                            <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto">
+                                <div className="text-left sm:text-right">
+                                    <span className="text-xs text-text/50 font-semibold block">Total</span>
+                                    <span className="text-xl sm:text-2xl font-black text-accent">
+                                        Rs. {totalPrice.toLocaleString()}
                                     </span>
                                 </div>
 
                                 {/* Remove Button */}
                                 <button
                                     onClick={handleRemoveItem}
-                                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200 group"
+                                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 group hover:scale-110 active:scale-95"
                                     title="Remove from cart"
                                 >
                                     <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

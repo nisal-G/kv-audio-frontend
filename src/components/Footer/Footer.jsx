@@ -25,8 +25,8 @@ const Footer = () => {
 
                     {/* Contact */}
                     <div className="footer-contact">
-                        <a href="mailto:info@kvaudio.com">info@kvaudio.com</a>
-                        <a href="tel:+15551234567">+1 (555) 123-4567</a>
+                        <a href="mailto:nimgunathilaka021@gmail.com">nimgunathilaka021@gmail.com</a>
+                        <a href="tel:+94701533894">+94 70 153 3894</a>
                     </div>
 
                     {/* Social */}

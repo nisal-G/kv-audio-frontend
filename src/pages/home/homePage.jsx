@@ -52,7 +52,8 @@ export default function HomePage() {
         <div className="w-full min-h-screen flex flex-col">
             <Header />
             <div className="w-full flex-1 overflow-y-auto">
-                <Routes path="/*">
+                <Routes>
+                    <Route path="/" element={<Home />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/about" element={<AboutUs />} />
@@ -60,7 +61,7 @@ export default function HomePage() {
                     <Route path="/items" element={<Items />} />
                     <Route path="/product/:key" element={<ProductOverview />} />
                     <Route path="/booking" element={<BookingPage />} />
-                    <Route path="/*" element={< ErrorNotFound />} />
+                    <Route path="/*" element={<ErrorNotFound />} />
                 </Routes>
             </div>
             <Footer />
